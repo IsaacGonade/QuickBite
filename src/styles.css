@@ -1,1 +1,103 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root {
+  --primary: #f02828;
+  --secondary: #1a1a1a;
+  --text: #ffffff;
+  --bg: #0f0f0f;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+}
+
+/* 1. Le damos un fondo oscuro sólido a la cajita del calendario */
+.mat-datepicker-content, 
+div.mat-mdc-datepicker-content {
+  background-color: #1e1e1e !important;
+  color: #ffffff !important;
+  border: 1px solid #444;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* 2. Arreglamos el color de los días, los meses y las flechas */
+.mat-calendar-body-cell-content,
+.mat-calendar-table-header th,
+.mat-calendar-arrow,
+.mat-icon,
+.mat-calendar-previous-button,
+.mat-calendar-next-button {
+  color: #dddddd !important;
+}
+
+/* 3. Color naranja de QuickBite para el día seleccionado */
+.mat-calendar-body-selected {
+  background-color: var(--primary) !important;
+  color: white !important;
+}
+
+/* 4. Arreglamos el fondo del propio input (la caja donde se lee la fecha) */
+.mat-mdc-text-field-wrapper {
+  background-color: #2a2a2a !important;
+}
+.mdc-text-field--outlined .mdc-notched-outline {
+  border-color: #444 !important;
+}
+input.mat-mdc-input-element {
+  color: white !important;
+}
+
+/* =========================================
+   ESTILOS PARA LAS NOTIFICACIONES (SNACKBAR)
+   ========================================= */
+
+/* Estilo base para que encaje con el Modo Oscuro */
+.mdc-snackbar__surface {
+  background-color: #2a2a2a !important;
+  color: white !important;
+  border-radius: 8px !important;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+/* Notificación de ÉXITO */
+.snack-success .mdc-snackbar__surface {
+  border-left: 5px solid #2eb82e !important;
+}
+.snack-success .mat-mdc-snack-bar-button {
+  color: #2eb82e !important; /* Color del botón "Cerrar" */
+}
+
+/* Notificación de ERROR */
+.snack-error .mdc-snackbar__surface {
+  border-left: 5px solid #ff4d4d !important;
+}
+.snack-error .mat-mdc-snack-bar-button {
+  color: #ff4d4d !important;
+}
+
+/* Notificación de INFO (Color corporativo) */
+.snack-info .mdc-snackbar__surface {
+  border-left: 5px solid #ff6b00 !important;
+}
+.snack-info .mat-mdc-snack-bar-button {
+  color: #ff6b00 !important;
+}

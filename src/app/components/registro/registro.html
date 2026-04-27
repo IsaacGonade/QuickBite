@@ -1,0 +1,72 @@
+<div class="auth-container">
+  <h2>Crear Cuenta</h2>
+
+  <form [formGroup]="registroForm" (ngSubmit)="registrar()">
+    <div class="form-group">
+      <label>Nombre:</label>
+      <input
+        type="text"
+        formControlName="nombre"
+        placeholder="Ej: Juan Pérez"
+        [ngClass]="{ 'input-error': f.nombre.invalid && f.nombre.touched }"
+      />
+
+      @if (f.nombre.invalid && f.nombre.touched) {
+        <div class="error-text">
+          @if (f.nombre.errors?.['required']) {
+            <small>El nombre es obligatorio.</small>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label>Email:</label>
+      <input
+        type="email"
+        formControlName="email"
+        placeholder="juan@ejemplo.com"
+        [ngClass]="{ 'input-error': f.email.invalid && f.email.touched }"
+      />
+
+      @if (f.email.invalid && f.email.touched) {
+        <div class="error-text">
+          @if (f.email.errors?.['required']) {
+            <small>El email es obligatorio.</small>
+          }
+          @if (f.email.errors?.['email']) {
+            <small>Formato de email no válido.</small>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="form-group">
+      <label>Contraseña:</label>
+      <input
+        type="password"
+        formControlName="pass"
+        placeholder="••••••••"
+        [ngClass]="{ 'input-error': f.pass.invalid && f.pass.touched }"
+      />
+
+      @if (f.pass.invalid && f.pass.touched) {
+        <div class="error-text">
+          @if (f.pass.errors?.['required']) {
+            <small>La contraseña es obligatoria.</small>
+          }
+          @if (f.pass.errors?.['minlength']) {
+            <small>Mínimo 6 caracteres.</small>
+          }
+        </div>
+      }
+    </div>
+
+    <button type="submit" class="btn-submit" [disabled]="registroForm.invalid">Registrarse</button>
+  </form>
+
+  <div class="auth-footer">
+    <p>¿Ya tienes una cuenta?</p>
+    <button routerLink="/login" class="btn-outline">Iniciar sesión</button>
+  </div>
+</div>

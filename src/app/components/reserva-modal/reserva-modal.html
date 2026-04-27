@@ -1,0 +1,48 @@
+<div class="modal-container">
+  <h2 mat-dialog-title>Finalizar Reserva - Mesa {{ data.numero_mesa }}</h2>
+
+  <mat-dialog-content>
+    <p>
+      Reserva para el día {{ data.fecha | date: 'dd/MM/yyyy HH:mm' }}
+    </p>
+
+    <form [formGroup]="reservaForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre completo</mat-label>
+        <input matInput formControlName="nombre" />
+        @if (f['nombre'].invalid && f['nombre'].touched) {
+          <mat-error>El nombre es obligatorio (mín. 3 letras)</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput type="email" formControlName="email" />
+        @if (f['email'].invalid && f['email'].touched) {
+          <mat-error>Introduce un email válido</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Número de personas</mat-label>
+        <input matInput type="number" formControlName="comensales" />
+        <mat-hint>Máximo {{ data.capacidad }} personas en esta mesa</mat-hint>
+        @if (f['comensales'].invalid && f['comensales'].touched) {
+          <mat-error>Revisa el límite de comensales</mat-error>
+        }
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="cancelar()">Cancelar</button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="reservaForm.invalid"
+      (click)="confirmar()"
+    >
+      Reservar ahora
+    </button>
+  </mat-dialog-actions>
+</div>

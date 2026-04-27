@@ -1,0 +1,99 @@
+/* =========================================
+   ESTILOS DEL MODAL DE RESERVAS (DARK MODE)
+   ========================================= */
+
+/* 1. Forzamos el fondo oscuro a la tarjeta flotante */
+::ng-deep .mdc-dialog__surface {
+  background-color: #1e1e1e !important;
+  border: 1px solid #444 !important;
+  border-radius: 15px !important;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.8) !important;
+}
+
+/* 2. Título Naranja con borde debajo */
+::ng-deep .mat-mdc-dialog-title {
+  color: #ff6b00 !important;
+  font-family: 'Poppins', sans-serif !important;
+  font-size: 1.5rem !important;
+  border-bottom: 1px solid #333;
+  padding-bottom: 15px !important;
+  margin-bottom: 15px !important;
+}
+
+/* 3. Color del texto normal dentro del modal */
+::ng-deep .mat-mdc-dialog-content {
+  color: #ffffff !important;
+  padding-top: 10px !important;
+  overflow: visible !important; /* <--- ESTA ES LA CLAVE MÁGICA */
+  padding-bottom: 5px !important;
+}
+
+/* 4. ARREGLO DE LOS INPUTS (Cajas de texto) */
+::ng-deep .mdc-text-field--outlined .mdc-notched-outline {
+  border-color: #444 !important; /* Borde oscuro */
+}
+
+::ng-deep .mdc-text-field--outlined {
+  background-color: #2a2a2a !important; /* Fondo del input oscuro */
+}
+
+/* Color del texto que escribe el usuario */
+::ng-deep input.mat-mdc-input-element, 
+::ng-deep .mat-mdc-form-field-hint {
+  color: #ffffff !important;
+}
+
+/* Color de las etiquetas (Email, Nombre...) */
+::ng-deep .mdc-floating-label,
+::ng-deep .mat-mdc-form-field-label {
+  color: #aaaaaa !important;
+}
+
+/* 5. ARREGLO DE LOS BOTONES */
+::ng-deep .mat-mdc-dialog-actions {
+  padding: 15px 24px !important;
+  border-top: 1px solid #333;
+}
+
+/* Botón Cancelar */
+::ng-deep .mat-mdc-button:not(:disabled) {
+  color: #aaaaaa !important;
+  transition: color 0.3s;
+}
+::ng-deep .mat-mdc-button:not(:disabled):hover {
+  color: #ffffff !important;
+}
+
+/* Botón Reservar Ahora (Naranja) */
+::ng-deep .mat-mdc-raised-button.mat-primary {
+  background-color: #ff6b00 !important;
+  color: white !important;
+  border-radius: 8px !important;
+  padding: 0 20px !important;
+}
+
+/* Botón Reservar Ahora cuando está desactivado (Formulario inválido) */
+::ng-deep .mat-mdc-raised-button.mat-primary:disabled {
+  background-color: #444444 !important;
+  color: #777777 !important;
+}
+
+/* =========================================
+   6. ARREGLO DEL FOCUS (Adiós al borde azul)
+   ========================================= */
+
+/* Cambiar el borde a naranja cuando está seleccionado */
+::ng-deep .mdc-text-field--focused .mdc-notched-outline * {
+  border-color: #ff6b00 !important;
+  border-width: 2px !important;
+}
+
+/* Cambiar el texto de la etiqueta a naranja cuando está seleccionado */
+::ng-deep .mdc-text-field--focused .mdc-floating-label {
+  color: #ff6b00 !important;
+}
+
+/* Color del cursor parpadeante (caret) */
+::ng-deep .mat-mdc-input-element {
+  caret-color: #ff6b00 !important;
+}

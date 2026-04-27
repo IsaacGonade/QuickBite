@@ -1,0 +1,203 @@
+/* Contenedor principal */
+.reserva-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.dashboard-header h2 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.dashboard-header span {
+  color: #ff6b00;
+}
+
+.dashboard-header p {
+  color: #aaa;
+  font-size: 1.1rem;
+}
+
+/* Layout en dos columnas */
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+/* Tarjetas de Angular Material oscuras */
+.sidebar-card, .map-card {
+  background-color: #1e1e1e !important;
+  color: white !important;
+  border-radius: 15px !important;
+  border: 1px solid #333;
+}
+
+.sidebar-title {
+  color: #ff6b00;
+  margin-top: 0;
+  margin-bottom: 25px;
+  font-size: 1.5rem;
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/* Alertas de información y éxito */
+.resumen-seleccion {
+  min-height: 50px;
+  margin-bottom: 20px;
+}
+
+.alerta-exito {
+  background: rgba(46, 184, 46, 0.15);
+  color: #5cd65c;
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #2eb82e;
+  font-weight: 600;
+}
+
+.alerta-info {
+  color: #aaa;
+  text-align: center;
+  font-style: italic;
+  padding: 10px;
+}
+
+/* Botón principal */
+.btn-reservar {
+  width: 100%;
+  background: #ff6b00;
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-reservar:hover:not([disabled]) {
+  background: #e66000;
+  transform: translateY(-2px);
+}
+
+.btn-reservar[disabled] {
+  background: #444;
+  color: #777;
+  cursor: not-allowed;
+}
+
+/* MAPA DE MESAS */
+.map-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 15px;
+}
+
+.map-header h3 { margin: 0; font-size: 1.5rem; }
+
+/* Leyenda */
+.leyenda { display: flex; gap: 15px; font-size: 0.9rem; color: #ccc; }
+.dot { height: 12px; width: 12px; border-radius: 50%; display: inline-block; }
+.dot.libre { background-color: #2eb82e; }
+.dot.ocupada { background-color: #cc0000; }
+.dot.seleccionada { background-color: #ff6b00; }
+
+/* Mensaje cuando no hay fecha */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+}
+
+.empty-icon {
+  font-size: 60px;
+  width: 60px;
+  height: 60px;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+/* Las Mesas (El Grid) */
+.grid-mesas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 20px;
+}
+
+.mesa {
+  aspect-ratio: 1; /* Hace que sean cuadradas perfectas */
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.num-mesa { font-size: 2rem; font-weight: 800; }
+.capacidad { display: flex; align-items: center; gap: 5px; font-size: 0.9rem; margin-top: 5px; }
+.icon-small { font-size: 16px; width: 16px; height: 16px; }
+.ubicacion { position: absolute; bottom: 8px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
+
+/* Estados de las mesas */
+.mesa.libre {
+  background: #1a2a1a;
+  color: #5cd65c;
+  border-color: rgba(46, 184, 46, 0.3);
+}
+
+.mesa.libre:hover {
+  transform: translateY(-5px);
+  border-color: #2eb82e;
+  box-shadow: 0 10px 20px rgba(46, 184, 46, 0.2);
+}
+
+.mesa.ocupada {
+  background: #2a1a1a;
+  color: #ff4d4d;
+  border-color: rgba(204, 0, 0, 0.3);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.mesa.seleccionada {
+  background: #4a2700;
+  color: #ff9e42;
+  border-color: #ff6b00;
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(255, 107, 0, 0.3);
+}
+
+/* Responsividad para móviles y tablets */
+@media (max-width: 900px) {
+  .dashboard-content {
+    grid-template-columns: 1fr; /* Pone una columna debajo de otra */
+  }
+  .map-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+}

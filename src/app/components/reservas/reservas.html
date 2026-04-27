@@ -1,0 +1,99 @@
+<div class="reserva-dashboard">
+  
+  <div class="dashboard-header">
+    <h2>Reserva tu experiencia en <span>QuickBite</span></h2>
+    <p>Selecciona la fecha, el turno y elige tu mesa ideal.</p>
+  </div>
+
+  <div class="dashboard-content">
+    
+    <mat-card class="sidebar-card">
+      <mat-card-content>
+        <h3 class="sidebar-title">Detalles de la Reserva</h3>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Fecha de la reserva</mat-label>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="fechaInput" readonly>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker>
+            <mat-datepicker-actions>
+              <button mat-button matDatepickerCancel>Cancelar</button>
+              <button mat-raised-button color="primary" matDatepickerApply (click)="combinarYConsultar()">
+                Aceptar
+              </button>
+            </mat-datepicker-actions>
+          </mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Turno</mat-label>
+          <mat-select [(ngModel)]="horaInput" (selectionChange)="combinarYConsultar()">
+            <mat-option value="13:30:00">13:30 - Comida</mat-option>
+            <mat-option value="14:30:00">14:30 - Comida</mat-option>
+            <mat-option value="20:30:00">20:30 - Cena</mat-option>
+            <mat-option value="21:00:00">21:00 - Cena</mat-option>
+            <mat-option value="21:30:00">21:30 - Cena</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="resumen-seleccion">
+          @if (mesaSeleccionadaId) {
+            <div class="alerta-exito">
+              <mat-icon style="vertical-align: middle; margin-right: 5px;">check_circle</mat-icon>
+              Mesa {{mesaSeleccionadaId}} seleccionada
+            </div>
+          } @else if (mesas.length > 0) {
+            <div class="alerta-info">
+              Selecciona una mesa libre
+            </div>
+          }
+        </div>
+
+        <button class="btn-reservar" 
+                [disabled]="!mesaSeleccionadaId" 
+                (click)="abrirModalReserva()">
+          Finalizar Reserva
+        </button>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="map-card">
+      <mat-card-content>
+        <div class="map-header">
+          <h3>Distribución de la Sala</h3>
+          <div class="leyenda">
+            <span class="dot libre"></span> Libre
+            <span class="dot ocupada"></span> Ocupada
+            <span class="dot seleccionada"></span> Tu Mesa
+          </div>
+        </div>
+
+        @if (mesas.length === 0) {
+          <div class="empty-state">
+            <mat-icon class="empty-icon">calendar_month</mat-icon>
+            <p>Por favor, selecciona una fecha y turno para ver la disponibilidad en tiempo real.</p>
+          </div>
+        } @else {
+          <div class="grid-mesas">
+            @for (mesa of mesas; track mesa.id_mesa) {
+              <div class="mesa" 
+                   [ngClass]="{
+                     'libre': mesa.ocupada === 0, 
+                     'ocupada': mesa.ocupada === 1,
+                     'seleccionada': mesa.id_mesa === mesaSeleccionadaId
+                   }"
+                   (click)="seleccionarMesa(mesa.id_mesa, mesa.ocupada)">
+                
+                <span class="num-mesa">{{mesa.numero_mesa}}</span>
+                <span class="capacidad"><mat-icon class="icon-small">people</mat-icon> {{mesa.capacidad}}</span>
+                <span class="ubicacion">{{mesa.ubicacion}}</span>
+                
+              </div>
+            }
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>
