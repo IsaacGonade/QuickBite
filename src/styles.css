@@ -101,3 +101,142 @@ input.mat-mdc-input-element {
 .snack-info .mat-mdc-snack-bar-button {
   color: #ff6b00 !important;
 }
+
+
+/* =========================================
+   MENÚS DESPLEGABLES (SELECT) MODO OSCURO
+   ========================================= */
+.mat-mdc-select-panel {
+  background-color: #2a2a2a !important;
+  border: 1px solid #444;
+  border-radius: 8px !important;
+}
+
+.mat-mdc-option {
+  color: #ffffff !important;
+}
+
+.mat-mdc-option:hover:not(.mdc-list-item--disabled) {
+  background-color: #333333 !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text {
+  color: #ff6b00 !important;
+  font-weight: bold;
+}
+
+
+/* Forzar modales oscuros en toda la app */
+.dark-modal .mdc-dialog__surface {
+  background-color: #1a1a1a !important;
+  color: white !important;
+  border: 1px solid #333;
+}
+
+.dark-modal .mat-mdc-dialog-title {
+  color: #ff6b00 !important;
+}
+
+/* Cambiar el color del calendario para que se vea en fondo oscuro */
+.mat-datepicker-content {
+  background-color: #252525 !important;
+  color: white !important;
+}
+.mat-calendar-body-cell-content { color: white !important; }
+.mat-calendar-table-header th { color: #ff6b00 !important; }
+
+
+/* --- ESTILOS FORZADOS PARA EL DATEPICKER EN MODO OSCURO --- */
+.mat-datepicker-content .mat-calendar {
+  background-color: #252525 !important; /* Fondo gris oscuro */
+}
+
+/* Color blanco para los números de los días, los meses y los días de la semana */
+.mat-calendar-body-cell-content,
+.mat-calendar-table-header th,
+.mat-calendar-body-label,
+.mat-calendar-controls .mdc-button__label {
+  color: #ffffff !important;
+}
+
+/* Color naranja para el día que está seleccionado */
+.mat-calendar-body-selected {
+  background-color: #ff6b00 !important;
+  color: white !important;
+}
+
+/* Efecto hover (al pasar el ratón) sobre los días */
+.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+  background-color: #444 !important;
+}
+
+/* Flechas de cambiar de mes en blanco */
+.mat-calendar-previous-button,
+.mat-calendar-next-button {
+  color: white !important;
+}
+
+
+
+/* --- ARREGLOS PARA EL DESPLEGABLE DE TURNOS (MAT-SELECT) --- */
+
+/* 1. Hacer que el texto seleccionado se vea blanco en lugar de gris oscuro */
+.mat-mdc-select-value-text {
+  color: #ffffff !important;
+}
+
+/* 2. Cambiar el borde azul por tu naranja corporativo al hacer clic */
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__leading,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__notch,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__trailing {
+  border-color: #ff6b00 !important;
+}
+
+/* 3. Cambiar el color del label ("Turno*") al hacer clic para que sea naranja y no azul */
+.mat-mdc-form-field.mat-focused .mdc-floating-label {
+  color: #ff6b00 !important;
+}
+
+/* 4. Cambiar la flechita del desplegable a naranja cuando está enfocado */
+.mat-mdc-form-field.mat-focused .mat-mdc-select-arrow {
+  color: #ff6b00 !important;
+}
+
+/* Opcional: Asegurar que el fondo del input siga siendo oscuro */
+.mat-mdc-form-field .mdc-text-field--outlined {
+  background-color: #252525 !important;
+}
+
+
+/* --- RETOQUES FINALES DATEPICKER (Eliminar azules) --- */
+
+/* 1. Icono del calendario dentro del input */
+.mat-datepicker-toggle, 
+.mat-datepicker-toggle .mat-mdc-icon-button {
+  color: #ff6b00 !important;
+}
+
+/* 2. El círculo del día actual (el "30" en tu captura) */
+.mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: #ff6b00 !important;
+}
+
+/* 3. Botón "Cancelar" del Datepicker */
+.mat-datepicker-actions .mat-mdc-button {
+  color: #888 !important; 
+}
+
+/* 4. Botón "Aceptar" del Datepicker */
+.mat-datepicker-actions .mdc-button.mat-primary {
+  background-color: #ff6b00 !important;
+  color: white !important;
+  border-radius: 25px !important;
+  padding: 0 20px !important;
+}
+
+/* (Opcional) Si el borde del input general se sigue viendo azul al hacer clic: */
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__leading,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__notch,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__trailing {
+  border-color: #ff6b00 !important;
+}

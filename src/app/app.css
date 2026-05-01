@@ -1,0 +1,118 @@
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espacio entre los botones */
+}
+
+/* Botón del Admin (Fondo Naranja Sólido) */
+.btn-admin {
+  background-color: #ff6b00 !important;
+  color: #ffffff !important;
+  border-radius: 25px !important; /* Bordes redondeados modernos */
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+/* Botón de Mi Perfil (Borde Naranja) */
+.btn-perfil {
+  color: #ff6b00 !important;
+  border-color: #ff6b00 !important;
+  border-radius: 25px !important;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  background-color: rgba(255, 107, 0, 0.05) !important; /* Un fondo muy sutil */
+}
+
+.btn-perfil:hover {
+  background-color: rgba(255, 107, 0, 0.15) !important;
+}
+
+/* Ajuste fino de los iconos dentro del botón */
+.nav-actions mat-icon {
+  margin-right: 5px;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* --- Contenedor Principal de la Barra --- */
+.navbar {
+  padding: 1rem 2rem;
+  background-color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #ff6b00;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* --- Enlaces de texto (Inicio, Carta, etc.) --- */
+.nav-links {
+  display: flex;
+  gap: 25px;
+}
+
+.nav-item {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.05rem;
+  transition: color 0.3s ease;
+}
+
+.nav-item:hover {
+  color: #ff6b00; /* Se vuelven naranjas al pasar el ratón */
+}
+
+/* --- Separador y Contenedor de Botones --- */
+.spacer {
+  flex-grow: 1;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* --- Estilos de los Botones --- */
+.btn-login {
+  color: white !important;
+  font-weight: 500 !important;
+  font-size: 1.05rem !important;
+}
+
+.btn-admin {
+  background-color: #ff6b00 !important;
+  color: #ffffff !important;
+  border-radius: 25px !important;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.btn-perfil {
+  color: #ff6b00 !important;
+  border-color: #ff6b00 !important;
+  border-radius: 25px !important;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  background-color: rgba(255, 107, 0, 0.05) !important;
+}
+
+.btn-perfil:hover {
+  background-color: rgba(255, 107, 0, 0.15) !important;
+}
+
+/* Ajuste de los iconos dentro de los botones */
+.nav-actions mat-icon {
+  margin-right: 6px;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* --- Contenedor del Router Outlet --- */
+.main-content {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto; /* Centra el contenido en pantallas gigantes */
+}

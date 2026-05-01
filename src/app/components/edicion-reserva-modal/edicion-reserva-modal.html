@@ -1,0 +1,60 @@
+<h2 mat-dialog-title>Editar mi Reserva</h2>
+
+<mat-dialog-content>
+  <form
+    [formGroup]="editForm"
+    style="display: flex; flex-direction: column; gap: 15px; margin-top: 10px"
+  >
+    <!-- Nombre y Email (Bloqueados) -->
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" />
+    </mat-form-field>
+
+    <!-- Comensales con máximo dinámico -->
+    <mat-form-field appearance="outline">
+      <mat-label>Número de comensales (Max. {{ data.capacidad }})</mat-label>
+      <input matInput type="number" formControlName="num_comensales" />
+      <mat-error>Supera la capacidad de la mesa</mat-error>
+    </mat-form-field>
+
+    <div style="display: flex; gap: 15px">
+      <!-- Selector de FECHA -->
+      <mat-form-field appearance="outline" style="flex: 1">
+        <mat-label>Fecha</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="fecha" />
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <!-- Selector de HORA (Tus turnos) -->
+      <mat-form-field appearance="outline" style="flex: 1">
+        <mat-label>Turno</mat-label>
+        <mat-select formControlName="hora">
+          <mat-option value="13:30:00">13:30 - Comida</mat-option>
+          <mat-option value="14:30:00">14:30 - Comida</mat-option>
+          <mat-option value="20:30:00">20:30 - Cena</mat-option>
+          <mat-option value="21:00:00">21:00 - Cena</mat-option>
+          <mat-option value="21:30:00">21:30 - Cena</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()" style="color: #888">Cancelar</button>
+  <button
+    mat-flat-button
+    (click)="guardar()"
+    style="background-color: #ff6b00; color: white"
+    [disabled]="editForm.invalid"
+  >
+    Guardar Cambios
+  </button>
+</mat-dialog-actions>

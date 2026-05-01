@@ -130,3 +130,26 @@ mat-card-actions {
 ::ng-deep .mdc-tab-indicator__content--underline {
   border-color: #ff6b00 !important;
 }
+
+
+.precio-tachado {
+  text-decoration: line-through;
+  color: #888;
+  font-size: 0.9rem;
+  margin-right: 10px;
+}
+
+.precio-oferta {
+  color: #5cd65c; /* Un verde llamativo para la oferta */
+  font-weight: bold;
+}
+
+.badge-dto {
+  background: #ff6b00;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+}

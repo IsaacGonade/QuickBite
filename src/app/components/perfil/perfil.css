@@ -1,0 +1,186 @@
+/* --- CONTENEDOR PRINCIPAL --- */
+.perfil-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  color: white;
+}
+
+.perfil-header h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.perfil-header span {
+  color: #ff6b00; /* Tu naranja */
+}
+
+.perfil-header p {
+  text-align: center;
+  color: #aaa;
+  margin-bottom: 40px;
+}
+
+/* --- TABS (Pestañas) --- */
+::ng-deep .mat-mdc-tab-group {
+  --mdc-tab-indicator-active-indicator-color: #ff6b00; /* Línea naranja */
+}
+
+::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+  color: #888 !important; /* Texto inactivo */
+  font-weight: 600;
+}
+
+::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #ff6b00 !important; /* Texto activo naranja */
+}
+
+/* --- TARJETAS Y FORMULARIOS --- */
+.perfil-card {
+  background-color: #1a1a1a !important;
+  border: 1px solid #333;
+  border-radius: 15px !important;
+  padding: 30px;
+  margin-top: 20px;
+}
+
+/* Inputs de Material con tu estética */
+::ng-deep .mat-mdc-form-field {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* Color de fondo de los inputs para que no se vean negros/vacíos */
+::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled) {
+  background-color: #252525 !important;
+}
+
+::ng-deep .mat-mdc-form-field-label {
+  color: #aaa !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
+  color: #ff6b00 !important; /* Labels en naranja al enfocar */
+}
+
+/* --- BOTONES --- */
+.btn-guardar {
+  background-color: #ff6b00 !important;
+  color: white !important;
+  padding: 10px 30px !important;
+  border-radius: 25px !important;
+  font-weight: 700 !important;
+  margin-top: 20px;
+}
+
+/* --- ZONA DE PELIGRO --- */
+.zona-peligro {
+  margin-top: 50px;
+  padding: 25px;
+  border: 1px dashed #ff4444;
+  border-radius: 15px;
+  background-color: rgba(255, 68, 68, 0.05);
+}
+
+.zona-peligro h3 {
+  color: #ff4444;
+  font-weight: 800;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-cerrar {
+  border: 1px solid #555 !important;
+  color: #ddd !important;
+  border-radius: 25px !important;
+  margin-right: 15px !important;
+}
+
+.btn-cerrar:hover {
+  background-color: #333 !important;
+}
+
+.btn-eliminar {
+  background-color: white !important;
+  color: #ff4444 !important;
+  font-weight: 700 !important;
+  border-radius: 25px !important;
+}
+
+/* --- GRID DE RESERVAS --- */
+.grid-reservas {
+  display: grid;
+  /* Esto hace que las tarjetas no se estiren, sino que se pongan una al lado de otra */
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+  gap: 25px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+/* --- TARJETA DE RESERVA --- */
+.reserva-card {
+  background-color: #1a1a1a !important;
+  color: white !important;
+  border-radius: 12px !important;
+  border: 1px solid #333 !important;
+  /* Quitamos el borde extraño y ponemos una línea sólida elegante */
+  border-left: 6px solid #ff6b00 !important; 
+  padding: 15px !important;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.reserva-card:hover {
+  transform: translateY(-5px);
+  border-color: #555 !important;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+}
+
+/* --- CONTENIDO INTERNO --- */
+.reserva-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.reserva-info mat-icon {
+  color: #ff6b00;
+  font-size: 22px;
+}
+
+.reserva-info span {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #eee;
+}
+
+/* --- ACCIONES (Botones Editar/Cancelar) --- */
+::ng-deep .reserva-card .mat-mdc-card-actions {
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 0 !important;
+}
+
+.btn-edit-inline {
+  color: #4da6ff !important;
+  font-weight: 600 !important;
+}
+
+.btn-cancel-inline {
+  color: #ff4d4d !important;
+  font-weight: 600 !important;
+}
+
+/* --- ESTILO HISTORIAL (Más sutil) --- */
+.reserva-card.pasada {
+  border-left: 6px solid #444 !important;
+  opacity: 0.8;
+}
+
+.reserva-card.pasada .reserva-info mat-icon {
+  color: #777;
+}

@@ -28,9 +28,15 @@ export class ReservaModal {
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
     this.reservaForm = new FormGroup({
-      nombre: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      comensales: new FormControl(this.data.capacidad, [
+      // Si data.usuario existe, ponemos su nombre, si no, vacío.
+      nombre: new FormControl(this.data.usuario ? this.data.usuario.nombre : '', [
+        Validators.required,
+      ]),
+      email: new FormControl(this.data.usuario ? this.data.usuario.email : '', [
+        Validators.required,
+        Validators.email,
+      ]),
+      comensales: new FormControl('', [
         Validators.required,
         Validators.min(1),
         Validators.max(this.data.capacidad),

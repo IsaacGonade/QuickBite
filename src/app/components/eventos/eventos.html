@@ -1,0 +1,42 @@
+<div class="eventos-container">
+  <div class="eventos-header">
+    <h1>Próximos <span>Eventos</span></h1>
+    <p>Descubre lo que tenemos preparado para ti en QuickBite</p>
+  </div>
+
+  @if (cargando) {
+    <div class="loader">Buscando planes increíbles...</div>
+  } @else if (eventos.length === 0) {
+    <div class="empty-state">
+      <mat-icon class="icono-gigante">event_busy</mat-icon>
+      <h2>No hay eventos próximos</h2>
+      <p>Estamos preparando nuevas sorpresas. ¡Vuelve pronto!</p>
+    </div>
+  } @else {
+    <div class="grid-eventos">
+      @for (evento of eventos; track evento.id_evento) {
+        <mat-card class="evento-card">
+          
+          <div class="imagen-container">
+            <img mat-card-image [src]="evento.url_imagen || 'assets/placeholder-evento.jpg'" alt="Evento">
+            
+            <div class="fecha-badge">
+              <mat-icon>calendar_today</mat-icon>
+              <span>{{ evento.fecha_inicio | date:'dd MMM, HH:mm' }} - {{ evento.fecha_fin | date:'dd MMM, HH:mm' }}</span>
+            </div>
+          </div>
+
+          <mat-card-content>
+            <h2 class="evento-titulo">{{ evento.titulo }}</h2>
+            <p class="evento-desc">{{ evento.descripcion }}</p>
+          </mat-card-content>
+
+          <mat-card-actions align="end" class="card-footer">
+             <button mat-button class="btn-reserva">Reservar Mesa</button>
+          </mat-card-actions>
+          
+        </mat-card>
+      }
+    </div>
+  }
+</div>

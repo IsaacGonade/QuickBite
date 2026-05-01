@@ -20,4 +20,8 @@ export class ReservasService {
   crearReserva(reserva: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/reservas`, reserva);
   }
+
+  actualizarReserva(id: number, datos: any) {
+    return this.http.put(`${this.apiUrl}/reservas/${id}`, datos);
+  }
 }

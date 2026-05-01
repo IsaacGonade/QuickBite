@@ -1,0 +1,139 @@
+.admin-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.admin-header {
+  margin-bottom: 30px;
+}
+
+.admin-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 5px;
+}
+
+.admin-header span { color: #ff6b00; }
+.admin-header p { color: #aaa; }
+
+.tab-content {
+  padding: 30px 0;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.toolbar h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.btn-nuevo {
+  background-color: #ff6b00 !important;
+  color: white !important;
+  font-weight: bold !important;
+}
+
+/* =========================================
+   ESTILOS DE LA TABLA (DARK MODE)
+   ========================================= */
+.table-container {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+::ng-deep .dark-table {
+  background-color: transparent !important;
+  width: 100%;
+}
+
+::ng-deep .dark-table th.mat-mdc-header-cell {
+  background-color: #2a2a2a !important;
+  color: #ff6b00 !important;
+  font-weight: bold;
+  font-size: 1rem;
+  border-bottom: 1px solid #444 !important;
+}
+
+::ng-deep .dark-table td.mat-mdc-cell {
+  color: #ddd !important;
+  border-bottom: 1px solid #333 !important;
+  vertical-align: middle;
+}
+
+/* Miniatura de la imagen */
+.thumb-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+  margin: 5px 0;
+}
+
+/* Badges y Estados */
+.badge-cat {
+  background-color: #333;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  color: #bbb;
+}
+
+.status-on {
+  color: #5cd65c;
+  background: rgba(46, 184, 46, 0.15);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.status-off {
+  color: #ff4d4d;
+  background: rgba(204, 0, 0, 0.15);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+/* Botones de acción */
+.text-right { text-align: right !important; padding-right: 20px !important; }
+
+.btn-edit { color: #4da6ff !important; }
+.btn-delete { color: #ff4d4d !important; }
+
+/* Mensaje vacío */
+.empty-state {
+  padding: 40px;
+  text-align: center;
+  color: #888;
+}
+
+/* =========================================
+   ESTILOS DE LAS PESTAÑAS (Tabs de Material)
+   ========================================= */
+
+/* Texto de las pestañas en gris claro para que se lea bien */
+::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+  color: #aaaaaa !important;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+/* Color naranja cuando la pestaña está seleccionada/activa */
+::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #ff6b00 !important;
+  font-weight: bold;
+}
+
+/* Cambiar la línea subrayada de azul a naranja */
+::ng-deep .mdc-tab-indicator__content--underline {
+  border-color: #ff6b00 !important;
+}

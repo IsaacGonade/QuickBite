@@ -12,17 +12,23 @@
         <h3 class="sidebar-title">Detalles de la Reserva</h3>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Fecha de la reserva</mat-label>
-          <input matInput [matDatepicker]="picker" [(ngModel)]="fechaInput" readonly>
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker>
-            <mat-datepicker-actions>
-              <button mat-button matDatepickerCancel>Cancelar</button>
-              <button mat-raised-button color="primary" matDatepickerApply (click)="combinarYConsultar()">
-                Aceptar
-              </button>
-            </mat-datepicker-actions>
-          </mat-datepicker>
+        <mat-label>Fecha de la reserva</mat-label>
+        
+        <!-- 1. AÑADIMOS EL (dateChange) AQUÍ EN EL INPUT -->
+        <input matInput [matDatepicker]="picker" [(ngModel)]="fechaInput" readonly (dateChange)="combinarYConsultar()">
+        
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker>
+          <mat-datepicker-actions>
+            <button mat-button matDatepickerCancel>Cancelar</button>
+            
+            <!-- 2. QUITAMOS EL (click) DE ESTE BOTÓN. Dejamos solo matDatepickerApply -->
+            <button mat-raised-button color="primary" matDatepickerApply>
+              Aceptar
+            </button>
+            
+          </mat-datepicker-actions>
+        </mat-datepicker>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">

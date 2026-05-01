@@ -1,0 +1,61 @@
+<h2 mat-dialog-title>{{ esEdicion ? 'Editar Plato' : 'Nuevo Plato' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="platoForm" style="overflow: visible; padding-top: 10px;">
+    
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre del Plato</mat-label>
+      <input matInput formControlName="nombre" placeholder="Ej: Hamburguesa Trufada">
+      @if (f['nombre'].invalid && f['nombre'].touched) {
+        <mat-error>El nombre es obligatorio.</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Categoría</mat-label>
+        <mat-select formControlName="id_categoria">
+          @for (cat of categorias; track cat.id_categoria) {
+            <mat-option [value]="cat.id_categoria">{{cat.nombre}}</mat-option>
+          }
+        </mat-select>
+        @if (f['id_categoria'].invalid && f['id_categoria'].touched) {
+          <mat-error>Selecciona una categoría.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Precio (€)</mat-label>
+        <input matInput type="number" formControlName="precio" placeholder="Ej: 12.50">
+        @if (f['precio'].invalid && f['precio'].touched) {
+          <mat-error>Precio inválido.</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput formControlName="descripcion" rows="3" placeholder="Ingredientes..."></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Ruta / URL de la Imagen</mat-label>
+      <input matInput formControlName="url_imagen" placeholder="assets/fotos/burger.jpg o https://...">
+    </mat-form-field>
+
+    <div class="toggle-box">
+      <p class="toggle-title">Visibilidad en la Carta</p>
+      <mat-slide-toggle formControlName="disponible">
+        {{ platoForm.get('disponible')?.value ? 'Plato Activo (Visible para clientes)' : 'Plato Oculto (Agotado)' }}
+      </mat-slide-toggle>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" style="padding-bottom: 20px; padding-right: 24px;">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-raised-button color="primary" [disabled]="platoForm.invalid" (click)="guardar()">
+    {{ esEdicion ? 'Actualizar' : 'Añadir a la carta' }}
+  </button>
+</mat-dialog-actions>

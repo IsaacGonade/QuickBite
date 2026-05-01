@@ -1,0 +1,108 @@
+<div class="perfil-container">
+  <div class="perfil-header">
+    <h1>Mi <span>Perfil</span></h1>
+    <p>Hola, {{ usuarioActual?.nombre }}. Aquí puedes gestionar tu cuenta y reservas.</p>
+  </div>
+
+  <mat-tab-group animationDuration="0ms" class="custom-tabs">
+    
+    <!-- PESTAÑA 1: MIS DATOS -->
+    <mat-tab label="Mis Datos">
+      <div class="tab-content">
+        <mat-card class="perfil-card">
+          <form [formGroup]="perfilForm" (ngSubmit)="actualizarPerfil()">
+            
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="nombre">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Correo Electrónico</mat-label>
+              <input matInput formControlName="email">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nueva Contraseña (déjalo en blanco para no cambiarla)</mat-label>
+              <input matInput type="password" formControlName="password">
+            </mat-form-field>
+
+            <div class="acciones-perfil">
+              <button mat-raised-button class="btn-guardar" color="primary" type="submit" [disabled]="perfilForm.invalid">
+                Guardar Cambios
+              </button>
+            </div>
+          </form>
+        </mat-card>
+
+        <div class="zona-peligro">
+          <h3>Zona de Peligro</h3>
+          <button mat-stroked-button class="btn-cerrar" color="warn" (click)="cerrarSesion()" style="margin-right: 10px;">Cerrar Sesión</button>
+          <button mat-raised-button class="btn-eliminar" color="warn" (click)="eliminarCuenta()">Eliminar Cuenta</button>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- PESTAÑA 2: MIS RESERVAS -->
+    <mat-tab label="Mis Reservas">
+      <div class="tab-content">
+        
+        <!-- Reservas Activas -->
+        <h3>Próximas Reservas</h3>
+        @if (reservasActivas.length === 0) {
+          <div class="empty-state">No tienes reservas próximas.</div>
+        } @else {
+          <div class="grid-reservas">
+            @for (reserva of reservasActivas; track reserva.id_reserva) {
+              <mat-card class="reserva-card activa">
+                <mat-card-content>
+                  <div class="reserva-info">
+                    <mat-icon>calendar_today</mat-icon>
+                    <span>{{ reserva.fecha_reserva | date:'dd/MM/yyyy' }}</span>
+                  </div>
+                  <div class="reserva-info">
+                    <mat-icon>schedule</mat-icon>
+                    <span>{{ reserva.fecha_reserva | date:'HH:mm' }}</span>
+                  </div>
+                  <div class="reserva-info">
+                    <mat-icon>group</mat-icon>
+                    <span>{{ reserva.num_comensales }} comensales</span>
+                  </div>
+                </mat-card-content>
+                <mat-card-actions align="end">
+                  <button mat-button class="btn-edit-inline" (click)="editarReserva(reserva)">Editar</button>
+                  <button mat-button class="btn-cancel-inline" (click)="cancelarReserva(reserva.id_reserva)">Cancelar</button>
+                </mat-card-actions>
+              </mat-card>
+            }
+          </div>
+        }
+
+        <!-- <mat-divider style="margin: 30px 0; border-color: #333;"></mat-divider> -->
+
+        <!-- Historial -->
+        <h3>Historial</h3>
+        @if (reservasPasadas.length === 0) {
+          <div class="empty-state">Aún no nos has visitado.</div>
+        } @else {
+          <div class="grid-reservas">
+            @for (reserva of reservasPasadas; track reserva.id_reserva) {
+              <mat-card class="reserva-card pasada">
+                <mat-card-content>
+                  <div class="reserva-info">
+                    <mat-icon>event_available</mat-icon>
+                    <!-- Usamos fecha_reserva tanto para el día como para la hora -->
+                    <span>{{ reserva.fecha_reserva | date:'dd/MM/yyyy' }} a las {{ reserva.fecha_reserva | date:'HH:mm' }}</span>
+                  </div>
+                  <!-- Usamos num_comensales -->
+                  <p style="color: #888; margin-top: 10px;">{{ reserva.num_comensales }} comensales</p>
+                </mat-card-content>
+              </mat-card>
+            }
+          </div>
+        }
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+</div>

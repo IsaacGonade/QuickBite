@@ -10,27 +10,38 @@
     <mat-tab-group animationDuration="500ms">
       @for (cat of categorias; track cat) {
         <mat-tab [label]="cat">
-          
           <div class="grid-platos">
             @for (plato of menu[cat]; track plato.id_plato) {
               <mat-card class="plato-card">
-                
                 @if (plato.url_imagen) {
-                  <img mat-card-image [src]="plato.url_imagen" [alt]="plato.nombre_plato" class="plato-img">
+                  <img
+                    mat-card-image
+                    [src]="plato.url_imagen"
+                    [alt]="plato.nombre_plato"
+                    class="plato-img"
+                  />
                 }
-
                 <mat-card-header>
-                  <mat-card-title>{{ plato.nombre_plato }}</mat-card-title> 
-                  <mat-card-subtitle class="precio-destacado">{{ plato.precio | currency:'EUR' }}</mat-card-subtitle>
+                  <mat-card-title>{{ plato.nombre_plato }}</mat-card-title>
+                  <mat-card-subtitle class="precio-destacado">
+                    @if (esUsuarioRegistrado && obtenerPrecioFinal(plato) < plato.precio) {
+                      <span class="precio-tachado">{{ plato.precio | currency: 'EUR' }}</span>
+                      <span class="precio-oferta">{{
+                        obtenerPrecioFinal(plato) | currency: 'EUR'
+                      }}</span>
+                      <span class="badge-dto">Dto. Especial</span>
+                    } @else {
+                      {{ plato.precio | currency: 'EUR' }}
+                    }
+                  </mat-card-subtitle>
                 </mat-card-header>
-                
+
                 <mat-card-content>
                   <p>{{ plato.descripcion }}</p>
                 </mat-card-content>
               </mat-card>
             }
           </div>
-
         </mat-tab>
       }
     </mat-tab-group>

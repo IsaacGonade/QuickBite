@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReservasService } from '../../services/reservas';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,6 +13,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIcon } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { AuthService } from '../../services/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reservas',
@@ -30,21 +32,33 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatIcon,
     MatSnackBarModule,
   ],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-ES' }],
   templateUrl: './reservas.html',
   styleUrl: './reservas.css',
 })
-export class Reservas {
-  fechaInput: Date | null = null; 
+export class Reservas implements OnInit {
+  fechaInput: Date | null = null;
   horaInput: string = '';
   fechaSeleccionada: string = '';
   mesas: any[] = [];
   mesaSeleccionadaId: number | null = null;
+  usuarioActual: any = null;
 
   constructor(
     private reservasService: ReservasService,
+    private cdr: ChangeDetectorRef,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar, 
+    private snackBar: MatSnackBar,
+    private authService: AuthService,
+    private router: Router,
   ) {}
+
+  ngOnInit() {
+    // Escuchamos si hay un usuario logueado al entrar a la página
+    this.authService.usuario$.subscribe((usuario) => {
+      this.usuarioActual = usuario;
+    });
+  }
 
   abrirModalReserva() {
     const mesaSeleccionada = this.mesas.find((m) => m.id_mesa === this.mesaSeleccionadaId);
@@ -56,6 +70,8 @@ export class Reservas {
         numero_mesa: mesaSeleccionada.numero_mesa,
         capacidad: mesaSeleccionada.capacidad,
         fecha: this.fechaSeleccionada,
+        // PASAMOS EL USUARIO AL MODAL PARA QUE RELLENE SUS DATOS
+        usuario: this.usuarioActual,
       },
     });
 
@@ -67,6 +83,11 @@ export class Reservas {
           email_cliente: datosFormulario.email,
           fecha_reserva: this.fechaSeleccionada,
           num_comensales: datosFormulario.comensales,
+          // AÑADIMOS EL ID DEL USUARIO A LA RESERVA FINAL (o null si es invitado)
+          // Nota: pon .id o .id_usuario según cómo se llame en tu authService
+          id_usuario: this.usuarioActual
+            ? this.usuarioActual.id_usuario || this.usuarioActual.id
+            : null,
         };
 
         this.reservasService.crearReserva(nuevaReserva).subscribe({
@@ -78,6 +99,8 @@ export class Reservas {
               verticalPosition: 'bottom',
             });
             this.consultarDisponibilidad();
+            // 2. ¡MAGIA! Redirigimos al usuario a la página de login
+            this.router.navigate(['/']);
           },
           error: (err) =>
             this.snackBar.open('Error al guardar la reserva.', 'Cerrar', {
@@ -108,6 +131,7 @@ export class Reservas {
       next: (data) => {
         this.mesas = data;
         this.mesaSeleccionadaId = null;
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Error:', err),
     });

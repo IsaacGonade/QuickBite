@@ -1,19 +1,42 @@
-<nav style="padding: 1rem; background: #1a1a1a; display: flex; gap: 15px; border-bottom: 2px solid #ff6b00;">
-  <a routerLink="/" style="color: white; text-decoration: none;">Inicio</a>
-  <a routerLink="/carta" style="color: white; text-decoration: none;">La Carta</a>
-  <a routerLink="/reservas" style="color: white; text-decoration: none;">Reservar Mesa</a>
+<nav class="navbar">
+  <!-- Enlaces principales de navegación -->
+  <div class="nav-links">
+    <a routerLink="/" class="nav-item">Inicio</a>
+    <a routerLink="/carta" class="nav-item">La Carta</a>
+    <a routerLink="/reservas" class="nav-item">Reservar Mesa</a>
+    <a routerLink="/eventos" class="nav-item">Eventos</a>
+  </div>
 
-  <div style="flex-grow: 1;"></div> <a *ngIf="usuarioActual?.rol === 'admin'" routerLink="/admin" style="color: #ff1e00; text-decoration: none;">
-    Panel de Control
-  </a>
+  <!-- Este div vacío empuja los botones hacia la derecha -->
+  <div class="spacer"></div> 
 
-  <a *ngIf="!usuarioActual" routerLink="/login" style="color: white; text-decoration: none;">Login</a>
-  
-  <a *ngIf="usuarioActual" (click)="cerrarSesion()" style="color: #ff4d4d; cursor: pointer; text-decoration: none;">
-    Cerrar Sesión ({{usuarioActual.nombre}})
-  </a>
+  <!-- Zona de Botones de Usuario / Admin -->
+  <div class="nav-actions">
+    
+    <!-- Si NO hay usuario, mostramos botón de Login -->
+    @if (!usuarioActual) {
+      <a mat-button routerLink="/login" class="btn-login">Login</a>
+    }
+
+    <!-- Si el usuario es Admin, mostramos su botón naranja sólido -->
+    @if (usuarioActual?.rol === 'admin') {
+      <button mat-flat-button class="btn-admin" routerLink="/admin">
+        <mat-icon>admin_panel_settings</mat-icon>
+        Panel de Control
+      </button>
+    }
+
+    <!-- Si hay cualquier usuario logueado, mostramos el acceso a su Perfil -->
+    @if (usuarioActual) {
+      <button mat-stroked-button class="btn-perfil" routerLink="/perfil">
+        <mat-icon>account_circle</mat-icon>
+        {{usuarioActual.nombre}}
+      </button>
+    }
+
+  </div>
 </nav>
 
-<main style="padding: 20px;">
+<main class="main-content">
   <router-outlet></router-outlet>
 </main>

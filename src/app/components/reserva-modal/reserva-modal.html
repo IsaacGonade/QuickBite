@@ -9,7 +9,7 @@
     <form [formGroup]="reservaForm">
       <mat-form-field appearance="outline">
         <mat-label>Nombre completo</mat-label>
-        <input matInput formControlName="nombre" />
+        <input matInput formControlName="nombre" [readonly]="data.usuario != null" />
         @if (f['nombre'].invalid && f['nombre'].touched) {
           <mat-error>El nombre es obligatorio (mín. 3 letras)</mat-error>
         }
@@ -17,7 +17,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Correo electrónico</mat-label>
-        <input matInput type="email" formControlName="email" />
+        <input matInput type="email" formControlName="email" [readonly]="data.usuario != null" />
         @if (f['email'].invalid && f['email'].touched) {
           <mat-error>Introduce un email válido</mat-error>
         }

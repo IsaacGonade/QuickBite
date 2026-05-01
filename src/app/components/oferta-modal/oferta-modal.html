@@ -1,0 +1,56 @@
+<h2 mat-dialog-title>{{ esEdicion ? 'Editar Oferta' : 'Nueva Oferta' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="ofertaForm" style="padding-top: 10px; overflow: visible;">
+    
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre de la Promoción</mat-label>
+      <input matInput formControlName="nombre_oferta" placeholder="Ej: Black Friday, Días de Burger...">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Porcentaje de Descuento (%)</mat-label>
+      <input matInput type="number" formControlName="porcentaje_descuento" placeholder="Ej: 15">
+      <span matSuffix style="margin-right: 10px;">%</span>
+    </mat-form-field>
+
+    <p style="color: #ff6b00; font-size: 0.9rem; margin-bottom: 10px;">¿A qué aplica este descuento? (Selecciona solo uno)</p>
+    
+    <div class="row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Toda una Categoría</mat-label>
+        <mat-select formControlName="id_categoria">
+          <mat-option [value]="null">--- Ninguna ---</mat-option>
+          @for (cat of categorias; track cat.id_categoria) {
+            <mat-option [value]="cat.id_categoria">{{cat.nombre}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Un Plato Específico</mat-label>
+        <mat-select formControlName="id_plato">
+          <mat-option [value]="null">--- Ninguno ---</mat-option>
+          @for (plato of platos; track plato.id_plato) {
+            <mat-option [value]="plato.id_plato">{{plato.nombre}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="toggle-box">
+      <p class="toggle-title">Estado de la Oferta</p>
+      <mat-slide-toggle formControlName="activa" color="primary">
+        {{ ofertaForm.get('activa')?.value ? 'Oferta Activa' : 'Oferta Pausada' }}
+      </mat-slide-toggle>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" style="padding-bottom: 20px; padding-right: 24px;">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-raised-button color="primary" [disabled]="ofertaForm.invalid" (click)="guardar()">
+    {{ esEdicion ? 'Actualizar Oferta' : 'Crear Oferta' }}
+  </button>
+</mat-dialog-actions>
