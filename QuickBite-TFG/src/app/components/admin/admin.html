@@ -1,0 +1,556 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>Panel de <span>Administración</span></h1>
+    <p>Gestiona el menú, mesas, reservas y usuarios de QuickBite</p>
+  </div>
+
+  <!-- BOTONES DE NAVEGACIÓN PRINCIPAL -->
+  <!-- BOTONES DE NAVEGACIÓN PRINCIPAL -->
+  <div class="main-nav-buttons">
+    <button mat-flat-button [ngClass]="{'active-nav': vistaActual === 'dashboard'}" (click)="cambiarVista('dashboard')">
+      <mat-icon>dashboard</mat-icon> Resumen General
+    </button>
+    <button mat-flat-button [ngClass]="{'active-nav': vistaActual === 'menu'}" (click)="cambiarVista('menu')">
+      <mat-icon>restaurant_menu</mat-icon> Carta y Mesas
+    </button>
+    <button mat-flat-button [ngClass]="{'active-nav': vistaActual === 'reservas'}" (click)="cambiarVista('reservas')">
+      <mat-icon>book_online</mat-icon> Reservas
+    </button>
+    <button mat-flat-button [ngClass]="{'active-nav': vistaActual === 'usuarios'}" (click)="cambiarVista('usuarios')">
+      <mat-icon>people</mat-icon> Usuarios
+    </button>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- VISTA 0: DASHBOARD / ESTADÍSTICAS            -->
+  <!-- ========================================== -->
+  @if (vistaActual === 'dashboard') {
+    <div class="dashboard-container">
+      <div class="toolbar">
+        <h3>Estadísticas de QuickBite</h3>
+        <p style="color: #888; margin: 0;">Vista general del rendimiento del restaurante</p>
+      </div>
+
+      <div class="stats-grid">
+        
+        <!-- Tarjeta 1: Mesa Favorita -->
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(255, 107, 0, 0.2); color: #ff6b00;">
+            <mat-icon>table_restaurant</mat-icon>
+          </div>
+          <div class="stat-info">
+            <span class="stat-title">Mesa más popular</span>
+            <span class="stat-value">Mesa {{ stats.topMesa.numero }}</span>
+            <span class="stat-desc">{{ stats.topMesa.reservas }} reservas totales</span>
+          </div>
+        </div>
+
+        <!-- Tarjeta 2: Día Estrella -->
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(76, 175, 80, 0.2); color: #4CAF50;">
+            <mat-icon>today</mat-icon>
+          </div>
+          <div class="stat-info">
+            <span class="stat-title">Día más concurrido</span>
+            <span class="stat-value">{{ stats.topDia.nombre }}</span>
+            
+            <!-- Barra de progreso visual -->
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" [style.width]="stats.topDia.porcentaje + '%'" style="background: #4CAF50;"></div>
+            </div>
+            <span class="stat-desc">{{ stats.topDia.porcentaje }}% de ocupación semanal</span>
+          </div>
+        </div>
+
+        <!-- Tarjeta 3: Hora Punta -->
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(33, 150, 243, 0.2); color: #2196F3;">
+            <mat-icon>schedule</mat-icon>
+          </div>
+          <div class="stat-info">
+            <span class="stat-title">Horario estrella</span>
+            <span class="stat-value">{{ stats.topHora.hora }}</span>
+            <span class="stat-desc">{{ stats.topHora.reservas }} reservas en esta franja</span>
+          </div>
+        </div>
+
+        <!-- Tarjeta 4: Tendencia de Cuentas -->
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(156, 39, 176, 0.2); color: #9C27B0;">
+            <mat-icon>trending_up</mat-icon>
+          </div>
+          <div class="stat-info">
+            <span class="stat-title">Nuevos Usuarios (Mes)</span>
+            <span class="stat-value">{{ stats.nuevosUsuarios.cantidad }}</span>
+            <span class="stat-desc" style="color: #4CAF50;">
+              <mat-icon style="font-size: 14px; height: 14px; width: 14px;">arrow_upward</mat-icon>
+              {{ stats.nuevosUsuarios.tendencia }} respecto al mes anterior
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SECCIÓN DEL GRÁFICO -->
+      <div class="chart-section" style="margin-top: 30px;">
+        <div class="stat-card" style="display: block;">
+          
+          <!-- Título y selector de mes en la misma línea -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+              <h4 style="color: #fff; margin: 0; font-size: 1.1rem;">Evolución de Reservas</h4>
+              <p style="color: #888; font-size: 0.85rem; margin: 5px 0 0 0;">Reservas diarias del mes</p>
+            </div>
+            
+            <!-- Selector de mes nativo (muy ligero) -->
+            <mat-form-field appearance="outline" class="dashboard-month-selector">
+              <mat-select [(ngModel)]="mesGrafico" (selectionChange)="cambiarMesGrafico()">
+                @for (mes of mesesDisponibles; track mes.valor) {
+                  <mat-option [value]="mes.valor">{{ mes.nombre }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- Gráfico de barras -->
+          <div class="css-bar-chart">
+            @for (item of stats.grafico; track item.dia) {
+              <div class="bar-group">
+                <span class="bar-tooltip">{{ item.total }} res.</span>
+                <!-- Le ponemos un mínimo del 1% para que los días con 0 reservas se vea una rayita base -->
+                <div class="bar" [style.height]="item.total === 0 ? '2%' : item.porcentaje + '%'" 
+                     [style.opacity]="item.total === 0 ? '0.3' : '1'"></div>
+                <span class="bar-label">{{ item.dia }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ========================================== -->
+  <!-- VISTA 1: CARTA Y MESAS (Tus tabs actuales) -->
+  <!-- ========================================== -->
+  @if (vistaActual === 'menu') {
+    <mat-tab-group animationDuration="0ms">
+      
+      <!-- PESTAÑA: PLATOS (Tu código intacto) -->
+      <mat-tab label="Platos">
+        <div class="tab-content">
+          <div class="toolbar">
+            <h3>Menú Actual</h3>
+            <button mat-raised-button color="primary" class="btn-nuevo" (click)="abrirModalPlato()">
+              <mat-icon>add</mat-icon> Añadir Plato
+            </button>
+          </div>
+          <div class="table-container">
+            <table mat-table [dataSource]="platos" class="dark-table">
+              <ng-container matColumnDef="imagen">
+                <th mat-header-cell *matHeaderCellDef> Imagen </th>
+                <td mat-cell *matCellDef="let plato"> 
+                  <img [src]="plato.url_imagen" class="thumb-img" alt="Foto">
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef> Nombre del Plato </th>
+                <td mat-cell *matCellDef="let plato"> <strong>{{plato.nombre}}</strong> </td>
+              </ng-container>
+              <ng-container matColumnDef="categoria">
+                <th mat-header-cell *matHeaderCellDef> Categoría </th>
+                <td mat-cell *matCellDef="let plato"> 
+                  <span class="badge-cat">{{plato.nombre_categoria}}</span> 
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="precio">
+                <th mat-header-cell *matHeaderCellDef> Precio </th>
+                <td mat-cell *matCellDef="let plato"> {{plato.precio | currency:'EUR'}} </td>
+              </ng-container>
+              <ng-container matColumnDef="disponible">
+                <th mat-header-cell *matHeaderCellDef> Estado </th>
+                <td mat-cell *matCellDef="let plato">
+                  @if (plato.disponible) {
+                    <span class="status-on">Activo</span>
+                  } @else {
+                    <span class="status-off">Agotado</span>
+                  }
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef class="text-right"> Acciones </th>
+                <td mat-cell *matCellDef="let plato" class="text-right">
+                  <button mat-icon-button class="btn-edit" (click)="abrirModalPlato(plato)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button class="btn-delete" (click)="eliminarPlato(plato.id_plato)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="columnasPlatos"></tr>
+              <tr mat-row *matRowDef="let row; columns: columnasPlatos;"></tr>
+            </table>
+            @if (platos.length === 0) {
+              <div class="empty-state">No hay platos registrados en la base de datos.</div>
+            }
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- PESTAÑA: CATEGORÍAS (Tu código intacto) -->
+      <mat-tab label="Categorías">
+        <div class="tab-content">
+          <div class="toolbar">
+            <h3>Categorías del Menú</h3>
+            <button mat-raised-button color="primary" class="btn-nuevo" (click)="abrirModalCategoria()">
+              <mat-icon>add</mat-icon> Nueva Categoría
+            </button>
+          </div>
+          <div class="table-container">
+            <table mat-table [dataSource]="categorias" class="dark-table">
+              <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef style="width: 30%;"> Nombre </th>
+                <td mat-cell *matCellDef="let cat"> 
+                  <span class="badge-cat">{{cat.nombre}}</span> 
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="descripcion">
+                <th mat-header-cell *matHeaderCellDef style="width: 50%;"> Descripción </th>
+                <td mat-cell *matCellDef="let cat" style="color: #aaa;"> 
+                  {{cat.descripcion || 'Sin descripción'}} 
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef class="text-right"> Acciones </th>
+                <td mat-cell *matCellDef="let cat" class="text-right">
+                  <button mat-icon-button class="btn-edit" (click)="abrirModalCategoria(cat)"><mat-icon>edit</mat-icon></button>
+                  <button mat-icon-button class="btn-delete" (click)="eliminarCategoria(cat.id_categoria)"><mat-icon>delete</mat-icon></button>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="columnasCategorias"></tr>
+              <tr mat-row *matRowDef="let row; columns: columnasCategorias;"></tr>
+            </table>
+            @if (categorias.length === 0) {
+              <div class="empty-state">No hay categorías registradas.</div>
+            }
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- PESTAÑA: EVENTOS (Tu código intacto) -->
+      <mat-tab label="Eventos">
+        <div class="tab-content">
+          <div class="toolbar">
+            <h3>Próximos Eventos</h3>
+            <button mat-raised-button color="primary" class="btn-nuevo" (click)="abrirModalEvento()">
+              <mat-icon>add</mat-icon> Nuevo Evento
+            </button>
+          </div>
+          <div class="table-container">
+            <table mat-table [dataSource]="eventos" class="dark-table">
+              <ng-container matColumnDef="titulo">
+                <th mat-header-cell *matHeaderCellDef style="width: 40%;"> Título </th>
+                <td mat-cell *matCellDef="let ev"> <strong>{{ev.titulo}}</strong> </td>
+              </ng-container>
+              <ng-container matColumnDef="fechas">
+                <th mat-header-cell *matHeaderCellDef> Fechas </th>
+                <td mat-cell *matCellDef="let ev" style="color: #aaa;"> 
+                  {{ ev.fecha_inicio | date:'dd/MM/yyyy HH:mm' }} - {{ ev.fecha_fin | date:'dd/MM/yyyy HH:mm' }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef class="text-right"> Acciones </th>
+                <td mat-cell *matCellDef="let ev" class="text-right">
+                  <button mat-icon-button class="btn-edit" (click)="abrirModalEvento(ev)"><mat-icon>edit</mat-icon></button>
+                  <button mat-icon-button class="btn-delete" (click)="eliminarEvento(ev.id_evento)"><mat-icon>delete</mat-icon></button>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="columnasEventos"></tr>
+              <tr mat-row *matRowDef="let row; columns: columnasEventos;"></tr>
+            </table>
+            @if (eventos.length === 0) { <div class="empty-state">No hay eventos.</div> }
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- PESTAÑA: OFERTAS (Tu código intacto) -->
+      <mat-tab label="Ofertas">
+        <div class="tab-content">
+          <div class="toolbar">
+            <h3>Descuentos y Promociones</h3>
+            <button mat-raised-button color="primary" class="btn-nuevo" (click)="abrirModalOferta()">
+              <mat-icon>add</mat-icon> Nueva Oferta
+            </button>
+          </div>
+          <div class="table-container">
+            <table mat-table [dataSource]="ofertas" class="dark-table">
+              <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef> Nombre Promo </th>
+                <td mat-cell *matCellDef="let ofe"> <strong>{{ofe.nombre_oferta}}</strong> </td>
+              </ng-container>
+              <ng-container matColumnDef="descuento">
+                <th mat-header-cell *matHeaderCellDef> Descuento </th>
+                <td mat-cell *matCellDef="let ofe"> <span class="badge-cat" style="background: #ff6b00; color: white;">-{{ofe.porcentaje_descuento}}%</span> </td>
+              </ng-container>
+              <ng-container matColumnDef="objetivo">
+                <th mat-header-cell *matHeaderCellDef> Objetivo </th>
+                <td mat-cell *matCellDef="let ofe"> 
+                  @if (ofe.nombre_categoria) { <span style="color: #4da6ff;">Categoría: {{ofe.nombre_categoria}}</span> }
+                  @else if (ofe.nombre_plato) { <span style="color: #ff99ff;">Plato: {{ofe.nombre_plato}}</span> }
+                  @else { <span style="color: #5cd65c;">Todo el menú</span> }
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="activa">
+                <th mat-header-cell *matHeaderCellDef> Estado </th>
+                <td mat-cell *matCellDef="let ofe">
+                  @if (ofe.activa) { <span class="status-on">Activa</span> }
+                  @else { <span class="status-off">Inactiva</span> }
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef class="text-right"> Acciones </th>
+                <td mat-cell *matCellDef="let ofe" class="text-right">
+                  <button mat-icon-button class="btn-edit" (click)="abrirModalOferta(ofe)"><mat-icon>edit</mat-icon></button>
+                  <button mat-icon-button class="btn-delete" (click)="eliminarOferta(ofe.id_oferta)"><mat-icon>delete</mat-icon></button>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="columnasOfertas"></tr>
+              <tr mat-row *matRowDef="let row; columns: columnasOfertas;"></tr>
+            </table>
+            @if (ofertas.length === 0) { <div class="empty-state">No hay ofertas.</div> }
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- 🌟 NUEVA PESTAÑA: MESAS 🌟 -->
+      <mat-tab label="Mesas">
+        <div class="tab-content">
+          <div class="toolbar">
+            <h3>Distribución de Mesas</h3>
+            <button mat-raised-button color="primary" class="btn-nuevo" (click)="abrirModalMesa()">
+              <mat-icon>add</mat-icon> Añadir Mesa
+            </button>
+          </div>
+          <div class="table-container">
+            <table mat-table [dataSource]="mesas" class="dark-table">
+              
+              <!-- Cambiamos id_mesa por numero_mesa -->
+              <ng-container matColumnDef="numero_mesa">
+                <th mat-header-cell *matHeaderCellDef style="width: 15%;"> Nº Mesa </th>
+                <td mat-cell *matCellDef="let mesa"> <strong>Mesa {{mesa.numero_mesa}}</strong> </td>
+              </ng-container>
+
+              <ng-container matColumnDef="capacidad">
+                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Capacidad </th>
+                <td mat-cell *matCellDef="let mesa"> 
+                  <mat-icon style="vertical-align: middle; font-size: 1.2rem; color: #888;">group</mat-icon> 
+                  {{mesa.capacidad}} comensales 
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ubicacion">
+                <th mat-header-cell *matHeaderCellDef style="width: 30%;"> Ubicación </th>
+                <td mat-cell *matCellDef="let mesa"> 
+                  <span class="badge-cat" style="background: #333; color: #ddd;">{{mesa.ubicacion || 'Sin asignar'}}</span> 
+                </td>
+              </ng-container>
+
+              <!-- NUEVA COLUMNA: Estado de Servicio -->
+              <ng-container matColumnDef="estado_servicio">
+                <th mat-header-cell *matHeaderCellDef style="width: 20%;"> Estado </th>
+                <td mat-cell *matCellDef="let mesa"> 
+                  @if (mesa.estado_servicio === 'Activa') {
+                    <span class="status-on">Activa</span>
+                  } @else {
+                    <span class="status-off" style="color: #ff9800; border-color: #ff9800; background: rgba(255, 152, 0, 0.1);">Mantenimiento</span>
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef class="text-right"> Acciones </th>
+                <td mat-cell *matCellDef="let mesa" class="text-right">
+                  <!-- NUEVO BOTÓN DE EDITAR -->
+                  <button mat-icon-button class="btn-edit" (click)="abrirModalMesa(mesa)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <!-- Le pasamos tanto el ID como el Número -->
+                  <button mat-icon-button class="btn-delete" (click)="eliminarMesa(mesa.id_mesa, mesa.numero_mesa)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="columnasMesas"></tr>
+              <tr mat-row *matRowDef="let row; columns: columnasMesas;"></tr>
+            </table>
+            
+            @if (mesas.length === 0) { 
+              <div class="empty-state">No hay mesas registradas.</div> 
+            }
+          </div>
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+  }
+
+  <!-- ========================================== -->
+  <!-- VISTA 2: GESTIÓN DE RESERVAS               -->
+  <!-- ========================================== -->
+  @if (vistaActual === 'reservas') {
+    <div class="tab-content">
+      
+      <!-- Usamos tu clase toolbar para los filtros -->
+      <div class="toolbar" style="justify-content: flex-start; gap: 20px;">
+        <mat-form-field appearance="outline" style="width: 250px;">
+          <mat-label>Filtrar por fecha</mat-label>
+          <input matInput [matDatepicker]="filtroPicker" [(ngModel)]="fechaFiltro" (dateChange)="cargarReservasAdmin()" readonly>
+          <mat-datepicker-toggle matIconSuffix [for]="filtroPicker"></mat-datepicker-toggle>
+          <mat-datepicker #filtroPicker></mat-datepicker>
+        </mat-form-field>
+
+        @if (fechaFiltro) {
+          <button mat-stroked-button (click)="fechaFiltro = null; cargarReservasAdmin()">
+            Ver Todas
+          </button>
+        }
+      </div>
+
+      <!-- Usamos tu clase table-container y dark-table nativo de HTML -->
+      <div class="table-container">
+        <table class="dark-table" style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="text-align: left; border-bottom: 1px solid #333;">
+              <th style="padding: 15px;">Fecha y Hora</th>
+              <th style="padding: 15px;">Cliente</th>
+              <th style="padding: 15px;">Mesa</th>
+              <th style="padding: 15px;">Estado</th>
+              <th style="padding: 15px; text-align: right;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (res of listaReservas; track res.id_reserva) {
+              <tr style="border-bottom: 1px solid #2a2a2a;">
+                <td style="padding: 15px;">{{ res.fecha_reserva | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td style="padding: 15px;">
+                  <!-- Cambiamos las variables a las correctas de tu BD -->
+                  <strong>{{ res.nombre_cliente }}</strong><br>
+                  <small style="color: #aaa;">{{ res.email_cliente }}</small>
+                </td>
+                <td style="padding: 15px;">Mesa {{ res.id_mesa }} ({{ res.num_comensales }} comensales)</td>
+                <td style="padding: 15px;">
+                  <span class="badge" [ngClass]="'badge-' + res.estado.toLowerCase()">
+                    {{ res.estado }}
+                  </span>
+                </td>
+                <td style="padding: 15px; text-align: right;">
+                  @if (res.estado === 'Pendiente') {
+                    <button mat-icon-button style="color: #4CAF50;" (click)="cambiarEstadoReserva(res, 'Confirmada')" matTooltip="Confirmar">
+                      <mat-icon>check_circle</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="cambiarEstadoReserva(res, 'Cancelada')" matTooltip="Rechazar">
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  } @else {
+                    <span style="color: #666; font-size: 0.8rem;">Gestionada</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        @if (listaReservas.length === 0) {
+          <div class="empty-state">No hay reservas para esta fecha.</div>
+        }
+      </div>
+
+    </div>
+  }
+
+  <!-- ========================================== -->
+  <!-- VISTA 3: GESTIÓN DE USUARIOS               -->
+  <!-- ========================================== -->
+  @if (vistaActual === 'usuarios') {
+    <div class="tab-content">
+      
+      <!-- Buscador -->
+      <div class="toolbar" style="justify-content: flex-start;">
+        <mat-form-field appearance="outline" style="width: 300px;">
+          <mat-label>Buscar por nombre o email</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput [(ngModel)]="busquedaUsuario" (keyup)="cargarUsuariosAdmin()" placeholder="Ej. juan@correo.com">
+          
+          <!-- Botón para limpiar la búsqueda -->
+          @if (busquedaUsuario) {
+            <button mat-icon-button matSuffix (click)="busquedaUsuario = ''; cargarUsuariosAdmin()">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- Tabla de usuarios -->
+      <div class="table-container">
+        <table class="dark-table" style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="text-align: left; border-bottom: 1px solid #333;">
+              <th style="padding: 15px;">Usuario</th>
+              <th style="padding: 15px;">Rol Actual</th>
+              <th style="padding: 15px; text-align: right;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of listaUsuarios; track user.id_usuario) {
+              <tr style="border-bottom: 1px solid #2a2a2a;">
+                
+                <td style="padding: 15px;">
+                  <div style="display: flex; align-items: center; gap: 15px;">
+                    <mat-icon style="color: #888;">account_circle</mat-icon>
+                    <div>
+                      <strong>{{ user.nombre_usuario }}</strong><br>
+                      <small style="color: #aaa;">{{ user.email }}</small>
+                    </div>
+                  </div>
+                </td>
+                
+                <td style="padding: 15px;">
+                  <!-- Etiqueta visual para el rol -->
+                  @if (user.rol === 'admin') {
+                    <span class="badge" style="background-color: rgba(255, 107, 0, 0.2); color: #ff6b00; border: 1px solid #ff6b00;">Admin</span>
+                  } @else {
+                    <span class="badge" style="background-color: rgba(136, 136, 136, 0.2); color: #ccc; border: 1px solid #666;">Cliente</span>
+                  }
+                </td>
+                
+                <td style="padding: 15px; text-align: right;">
+                  <!-- Botón que cambia dependiendo del rol -->
+                  @if (user.rol === 'admin') {
+                    <button mat-stroked-button color="warn" (click)="cambiarRol(user)">
+                      Quitar Admin
+                    </button>
+                  } @else {
+                    <button mat-stroked-button color="primary" (click)="cambiarRol(user)">
+                      Hacer Admin
+                    </button>
+                  }
+                </td>
+                
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        @if (listaUsuarios.length === 0) {
+          <div class="empty-state">
+            <mat-icon style="font-size: 3rem; height: 3rem; width: 3rem; color: #444; margin-bottom: 10px;">search_off</mat-icon>
+            <br>No se encontraron usuarios.
+          </div>
+        }
+      </div>
+
+    </div>
+  }
+
+</div>

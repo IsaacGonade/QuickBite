@@ -1,0 +1,77 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
+  min-width: 320px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.dialog-title { 
+  color: #fff; 
+  margin-bottom: 0; 
+}
+
+.dialog-actions { 
+  margin-bottom: 10px; 
+  margin-right: 10px; 
+}
+
+/* Hacemos que el botón desactivado se vea gris y no se camufle */
+button:disabled {
+  background-color: #333 !important;
+  color: #666 !important;
+}
+
+/* ... mantén tus estilos anteriores de form-container, full-width, etc. ... */
+
+.dialog-actions { 
+  margin-bottom: 15px; /* Un poco más de margen inferior para respirar */
+  margin-right: 15px; 
+  display: flex;
+  gap: 20px; /* Separación exacta de tus otros modales */
+  align-items: center; /* Asegura que estén alineados verticalmente */
+}
+
+/* Estilo para el botón de Cancelar (Clonado de tus capturas) */
+.btn-cancelar {
+  background-color: transparent;
+  color: #aaa; /* Gris claro */
+  border: none; /* Sin borde, como en tus capturas */
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.btn-cancelar:hover {
+  color: #fff; /* Se ilumina al pasar el ratón */
+}
+
+/* Estilo para el botón principal (Clonado de tus capturas) */
+.btn-guardar {
+  background-color: #ff6b00; /* Naranja QuickBite */
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 25px; /* Bordes muy redondeados tipo píldora */
+  font-size: 15px;
+  font-weight: 600; /* Un poco más de peso en la fuente */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-guardar:hover:not(:disabled) {
+  background-color: #e65c00; 
+}
+
+/* Estilo cuando el botón principal está desactivado */
+.btn-guardar:disabled {
+  background-color: #444 !important;
+  color: #888 !important;
+  cursor: not-allowed;
+}

@@ -1,0 +1,446 @@
+.admin-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.admin-header {
+  margin-bottom: 30px;
+}
+
+.admin-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 5px;
+}
+
+.admin-header span { color: #ff6b00; }
+.admin-header p { color: #aaa; }
+
+.tab-content {
+  padding: 30px 0;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.toolbar h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+.btn-nuevo {
+  background-color: #ff6b00 !important;
+  color: white !important;
+  font-weight: bold !important;
+}
+
+/* =========================================
+   ESTILOS DE LA TABLA (DARK MODE)
+   ========================================= */
+.table-container {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+::ng-deep .dark-table {
+  background-color: transparent !important;
+  width: 100%;
+}
+
+::ng-deep .dark-table th.mat-mdc-header-cell {
+  background-color: #2a2a2a !important;
+  color: #ff6b00 !important;
+  font-weight: bold;
+  font-size: 1rem;
+  border-bottom: 1px solid #444 !important;
+}
+
+::ng-deep .dark-table td.mat-mdc-cell {
+  color: #ddd !important;
+  border-bottom: 1px solid #333 !important;
+  vertical-align: middle;
+}
+
+/* Miniatura de la imagen */
+.thumb-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+  margin: 5px 0;
+}
+
+/* Badges y Estados */
+.badge-cat {
+  background-color: #333;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  color: #bbb;
+}
+
+.status-on {
+  color: #5cd65c;
+  background: rgba(46, 184, 46, 0.15);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.status-off {
+  color: #ff4d4d;
+  background: rgba(204, 0, 0, 0.15);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+/* Botones de acción */
+.text-right { text-align: right !important; padding-right: 20px !important; }
+
+.btn-edit { color: #4da6ff !important; }
+.btn-delete { color: #ff4d4d !important; }
+
+/* Mensaje vacío */
+.empty-state {
+  padding: 40px;
+  text-align: center;
+  color: #888;
+}
+
+/* =========================================
+   ESTILOS DE LAS PESTAÑAS (Tabs de Material)
+   ========================================= */
+
+/* Texto de las pestañas en gris claro para que se lea bien */
+::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+  color: #aaaaaa !important;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+/* Color naranja cuando la pestaña está seleccionada/activa */
+::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #ff6b00 !important;
+  font-weight: bold;
+}
+
+/* Cambiar la línea subrayada de azul a naranja */
+::ng-deep .mdc-tab-indicator__content--underline {
+  border-color: #ff6b00 !important;
+}
+
+/* --- NAVEGACIÓN PRINCIPAL --- */
+.main-nav-buttons {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 20px;
+}
+
+/* Estado normal (inactivo) */
+.main-nav-buttons button {
+  background-color: #1e1e1e !important; /* Gris muy oscuro, casi negro */
+  color: #888 !important; /* Texto gris apagado */
+  border: 1px solid #333;
+  border-radius: 25px; /* Aspecto de píldora */
+  padding: 5px 20px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+/* Efecto al pasar el ratón */
+.main-nav-buttons button:not(.active-nav):hover {
+  background-color: #2a2a2a !important;
+  color: #fff !important;
+  border-color: #555;
+}
+
+/* Estado ACTIVO (Naranja QuickBite) */
+.main-nav-buttons button.active-nav {
+  background-color: #ff6b00 !important; 
+  color: #ffffff !important;
+  border-color: #ff6b00;
+  box-shadow: 0 4px 10px rgba(255, 107, 0, 0.3); /* Un pequeño resplandor naranja */
+}
+
+.main-nav-buttons button mat-icon {
+  margin-right: 8px;
+}
+
+/* --- DASHBOARD Y ESTADÍSTICAS --- */
+.dashboard-container {
+  padding-top: 10px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.stat-card {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+  border-color: #555;
+}
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-icon mat-icon {
+  font-size: 28px;
+  height: 28px;
+  width: 28px;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.stat-title {
+  color: #888;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.stat-desc {
+  color: #aaa;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Barras de progreso */
+.progress-bar-bg {
+  width: 100%;
+  height: 6px;
+  background-color: #333;
+  border-radius: 3px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1s ease-in-out;
+}
+
+/* --- GRÁFICO DE BARRAS CSS --- */
+.css-bar-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 250px; /* Altura total del gráfico */
+  padding-top: 30px;
+  border-bottom: 1px solid #444;
+  border-left: 1px solid #444;
+  margin-top: 10px;
+  position: relative;
+}
+
+.bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  width: 40px;
+  position: relative;
+}
+
+.bar {
+  width: 100%;
+  background: linear-gradient(to top, #ff6b00, #ff9800); /* Degradado naranja */
+  border-radius: 4px 4px 0 0;
+  transition: height 1s ease-out, background 0.3s ease;
+  min-height: 5px; /* Para que al menos se vea una rayita si hay 0 */
+  box-shadow: 0 0 10px rgba(255, 107, 0, 0.2);
+}
+
+.bar-group:hover .bar {
+  background: linear-gradient(to top, #e65c00, #ffac33);
+  box-shadow: 0 0 15px rgba(255, 107, 0, 0.5);
+  cursor: pointer;
+}
+
+.bar-label {
+  color: #888;
+  font-size: 0.8rem;
+  margin-top: 10px;
+  position: absolute;
+  bottom: -30px;
+}
+
+.bar-tooltip {
+  position: absolute;
+  top: -30px;
+  background-color: #222;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  white-space: nowrap;
+  border: 1px solid #444;
+}
+
+.bar-group:hover .bar-tooltip {
+  opacity: 1;
+}
+
+/* --- SELECTOR DE MES --- */
+.dark-month-picker {
+  background-color: #2a2a2a;
+  color: #fff;
+  border: 1px solid #444;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color-scheme: dark; /* Hace que el calendario nativo salga en oscuro */
+  cursor: pointer;
+}
+
+.dark-month-picker:focus {
+  outline: none;
+  border-color: #ff6b00;
+}
+
+/* --- GRÁFICO DE BARRAS CSS --- */
+.css-bar-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between; /* Espacia las 30 barras uniformemente */
+  height: 220px; 
+  padding-top: 30px;
+  border-bottom: 1px solid #444;
+  margin-top: 10px;
+  position: relative;
+  gap: 2px; /* Separación mínima entre barras */
+}
+
+.bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  flex: 1; /* Hace que todas las barras midan lo mismo de ancho */
+  position: relative;
+}
+
+.bar {
+  width: 80%; /* Deja un margen pequeño respecto a su contenedor */
+  background: linear-gradient(to top, #ff6b00, #ffac33);
+  border-radius: 3px 3px 0 0;
+  transition: height 0.8s ease-out, background 0.3s ease;
+}
+
+.bar-group:hover .bar {
+  background: linear-gradient(to top, #e65c00, #ffd54f);
+  opacity: 1 !important; /* Si estaba opaca por tener 0, se ilumina */
+  cursor: pointer;
+}
+
+.bar-label {
+  color: #888;
+  font-size: 0.7rem; /* Letra pequeñita para que quepan los 31 días */
+  margin-top: 10px;
+  position: absolute;
+  bottom: -25px;
+}
+
+.bar-tooltip {
+  position: absolute;
+  top: -35px;
+  background-color: #222;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  white-space: nowrap;
+  border: 1px solid #ff6b00;
+  z-index: 10;
+}
+
+.bar-group:hover .bar-tooltip {
+  opacity: 1;
+}
+
+/* --- SELECTOR DE MES ESTILO DASHBOARD --- */
+.dashboard-month-selector {
+  width: 170px;
+}
+
+/* Reducimos la altura del campo */
+.dashboard-month-selector .mdc-text-field--outlined {
+  height: 42px !important;
+  background-color: #2a2a2a; /* Fondo oscuro integrado */
+  border-radius: 6px;
+}
+
+/* Centramos el texto verticalmente */
+.dashboard-month-selector .mat-mdc-select-trigger {
+  top: -8px; 
+  position: relative;
+  font-weight: 500;
+}
+
+/* Ocultamos el espacio inferior que sobra (donde irían los errores) */
+.dashboard-month-selector .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+/* Coloreamos el borde al hacer foco con tu naranja */
+.dashboard-month-selector.mat-focused .mdc-notched-outline__leading,
+.dashboard-month-selector.mat-focused .mdc-notched-outline__notch,
+.dashboard-month-selector.mat-focused .mdc-notched-outline__trailing {
+  border-color: #ff6b00 !important;
+  border-width: 2px !important;
+}

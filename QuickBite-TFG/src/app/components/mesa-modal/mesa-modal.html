@@ -1,0 +1,42 @@
+<h2 mat-dialog-title class="dialog-title">{{ esEdicion ? 'Editar Mesa' : 'Añadir Nueva Mesa' }}</h2>
+
+<mat-dialog-content class="dark-theme-modal">
+  <div class="form-container">
+    
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Número de Mesa</mat-label>
+      <input matInput type="number" [(ngModel)]="mesa.numero_mesa" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Capacidad (Comensales)</mat-label>
+      <input matInput type="number" [(ngModel)]="mesa.capacidad" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Ubicación</mat-label>
+      <mat-select [(ngModel)]="mesa.ubicacion">
+        <mat-option value="Salón Principal">Salón Principal</mat-option>
+        <mat-option value="Terraza">Terraza</mat-option>
+        <mat-option value="Ventana">Ventana</mat-option>
+        <mat-option value="Zona VIP">Zona VIP</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Estado de Servicio</mat-label>
+      <mat-select [(ngModel)]="mesa.estado_servicio">
+        <mat-option value="Activa">Activa</mat-option>
+        <mat-option value="Mantenimiento">Mantenimiento</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button class="btn-modal-cancelar" (click)="cancelar()">Cancelar</button>
+  <button class="btn-modal-accion" (click)="guardar()" [disabled]="!mesa.numero_mesa || !mesa.capacidad">
+    {{ esEdicion ? 'Actualizar' : 'Crear' }}
+  </button>
+</mat-dialog-actions>

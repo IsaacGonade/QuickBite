@@ -54,8 +54,8 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end" style="padding-bottom: 20px; padding-right: 24px;">
-  <button mat-button (click)="cancelar()">Cancelar</button>
-  <button mat-raised-button color="primary" [disabled]="platoForm.invalid" (click)="guardar()">
+  <button class="btn-modal-cancelar" (click)="cancelar()">Cancelar</button>
+  <button class="btn-modal-accion" [disabled]="platoForm.invalid" (click)="guardar()">
     {{ esEdicion ? 'Actualizar' : 'Añadir a la carta' }}
   </button>
 </mat-dialog-actions>

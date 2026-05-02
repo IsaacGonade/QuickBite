@@ -4,11 +4,12 @@ import { EventosService } from '../../services/eventos';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterOutlet, RouterLink, Router } from '@angular/router';
 
 @Component({
   selector: 'app-eventos',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule],
+  imports: [RouterLink, CommonModule, MatCardModule, MatIconModule, MatButtonModule],
   templateUrl: './eventos.html',
   styleUrl: './eventos.css'
 })

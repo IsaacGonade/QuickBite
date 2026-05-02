@@ -63,4 +63,63 @@ export class AdminService {
   deleteOferta(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/ofertas/${id}`);
   }
+
+
+  // Obtener mesas
+  getMesas(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/mesas`);
+  }
+
+  // Crear mesa
+  crearMesa(mesa: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/mesas`, mesa);
+  }
+
+  // Actualizar mesa
+  actualizarMesa(id: number, mesa: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/mesas/${id}`, mesa);
+  }
+
+  // Eliminar mesa
+  eliminarMesa(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/mesas/${id}`);
+  }
+
+
+  // Traer reservas (le pasamos la fecha opcional)
+  getReservas(fecha?: string): Observable<any> {
+    let url = `${this.apiUrl}/reservas`;
+    if (fecha) {
+      url += `?fecha=${fecha}`;
+    }
+    return this.http.get(url);
+  }
+
+  // Cambiar el estado
+  actualizarEstadoReserva(id: number, estado: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/reservas/${id}/estado`, { estado });
+  }
+
+  // Obtener usuarios (con búsqueda opcional)
+  getUsuarios(busqueda?: string): Observable<any> {
+    let url = `${this.apiUrl}/usuarios`;
+    if (busqueda) {
+      url += `?busqueda=${busqueda}`;
+    }
+    return this.http.get(url);
+  }
+
+  // Cambiar el rol de un usuario
+  actualizarRolUsuario(id: number, rol: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/usuarios/${id}/rol`, { rol });
+  }
+
+  // Obtener estadísticas del Dashboard enviando el mes opcional
+  getEstadisticas(mes?: string): Observable<any> {
+    let url = `${this.apiUrl}/estadisticas`;
+    if (mes) {
+      url += `?mes=${mes}`;
+    }
+    return this.http.get(url);
+  }
 }

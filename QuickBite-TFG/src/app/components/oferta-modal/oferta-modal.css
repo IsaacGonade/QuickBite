@@ -35,3 +35,21 @@
 ::ng-deep input.mat-mdc-input-element, ::ng-deep .mat-mdc-select-value-text { color: #ffffff !important; }
 ::ng-deep .mdc-text-field--outlined { background-color: #2a2a2a !important; }
 ::ng-deep .mat-mdc-raised-button.mat-primary { background-color: #ff6b00 !important; }
+
+/* La caja que envuelve al interruptor, idéntica a la de Platos */
+.caja-toggle {
+  border: 1px solid #444; /* Borde sutil */
+  background-color: #2a2a2a; /* Fondo gris oscuro */
+  border-radius: 4px; /* Bordes ligeramente redondeados */
+  padding: 16px; /* Espacio interior generoso para que respire */
+  margin-top: 20px;
+}
+
+/* El titulito gris de arriba */
+.titulo-toggle {
+  color: #888;
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}

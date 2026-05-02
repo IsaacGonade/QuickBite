@@ -92,7 +92,7 @@ export class Reservas implements OnInit {
 
         this.reservasService.crearReserva(nuevaReserva).subscribe({
           next: () => {
-            this.snackBar.open('¡Reserva confirmada! Te hemos enviado un correo.', 'Genial', {
+            this.snackBar.open('¡Reserva realizada! Te hemos enviado un correo.', 'Genial', {
               duration: 4000,
               panelClass: ['snack-success'],
               horizontalPosition: 'center',

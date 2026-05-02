@@ -240,3 +240,62 @@ input.mat-mdc-input-element {
 .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__trailing {
   border-color: #ff6b00 !important;
 }
+
+/* ========================================= */
+/* ESTILOS GLOBALES PARA BOTONES DE MODALES  */
+/* ========================================= */
+
+/* Contenedor de las acciones en los modales */
+.modal-actions-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px; /* Separación estándar */
+  align-items: center;
+  padding: 15px 0 5px 0;
+}
+
+/* Botón de Cancelar (Gris, sin borde, solo texto) */
+.btn-modal-cancelar {
+  background-color: transparent;
+  color: #aaa;
+  border: none;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  font-family: inherit; /* Hereda la fuente de tu proyecto */
+}
+
+.btn-modal-cancelar:hover {
+  color: #fff;
+}
+
+/* Botón Principal de Acción (Naranja, redondeado, píldora) */
+.btn-modal-accion {
+  background-color: #ff6b00; /* Naranja corporativo */
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 25px; /* Forma de píldora */
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  font-family: inherit;
+}
+
+.btn-modal-accion:hover:not(:disabled) {
+  background-color: #e65c00;
+}
+
+.btn-modal-accion:active:not(:disabled) {
+  transform: scale(0.98); /* Pequeño efecto al hacer clic */
+}
+
+/* Estado desactivado para el botón principal */
+.btn-modal-accion:disabled {
+  background-color: #444 !important;
+  color: #888 !important;
+  cursor: not-allowed;
+}
