@@ -24,13 +24,14 @@
                 <mat-card-header>
                   <mat-card-title>{{ plato.nombre_plato }}</mat-card-title>
                   <mat-card-subtitle class="precio-destacado">
-                    @if (esUsuarioRegistrado && obtenerPrecioFinal(plato) < plato.precio) {
+                    <!-- Miramos si el usuario está registrado Y si el backend nos mandó un descuento -->
+                    @if (esUsuarioRegistrado && plato.porcentaje_descuento > 0) {
                       <span class="precio-tachado">{{ plato.precio | currency: 'EUR' }}</span>
-                      <span class="precio-oferta">{{
-                        obtenerPrecioFinal(plato) | currency: 'EUR'
-                      }}</span>
-                      <span class="badge-dto">Dto. Especial</span>
+                      <span class="precio-oferta">{{ plato.precio_final | currency: 'EUR' }}</span>
+                      <!-- Usamos el porcentaje real que calculó la base de datos -->
+                      <span class="badge-dto">-{{ plato.porcentaje_descuento }}%</span>
                     } @else {
+                      <!-- Si no está registrado o no hay descuento, precio normal -->
                       {{ plato.precio | currency: 'EUR' }}
                     }
                   </mat-card-subtitle>

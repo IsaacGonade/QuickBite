@@ -497,6 +497,7 @@ export class Admin implements OnInit {
                 panelClass: ['snack-success'],
               });
               this.cargarOfertas();
+              this.cargarPlatos()
             },
             error: () =>
               this.snackBar.open('Error al actualizar', 'Cerrar', {
@@ -512,12 +513,17 @@ export class Admin implements OnInit {
                 panelClass: ['snack-success'],
               });
               this.cargarOfertas();
+
+              this.cargarPlatos()
             },
-            error: () =>
-              this.snackBar.open('Error al crear oferta', 'Cerrar', {
+            error: (err) => {
+              // AQUÍ MOSTRAMOS SI EL PLATO YA TIENE OFERTA
+              const mensaje = err.error?.error || 'Error al crear la oferta.';
+              this.snackBar.open(mensaje, 'Cerrar', {
                 duration: 3000,
                 panelClass: ['snack-error'],
-              }),
+              })
+            }
           });
         }
       }

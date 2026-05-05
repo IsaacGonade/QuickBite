@@ -29,7 +29,7 @@ import { provideNativeDateAdapter, MAT_DATE_LOCALE } from '@angular/material/cor
 })
 export class EdicionReservaModal implements OnInit {
   editForm: FormGroup;
-
+  fechaMinima: string = new Date().toISOString().split('T')[0];
   constructor(
     public dialogRef: MatDialogRef<EdicionReservaModal>,
     @Inject(MAT_DIALOG_DATA) public data: any,

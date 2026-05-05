@@ -2,6 +2,17 @@ const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
 
+const nodemailer = require("nodemailer");
+
+// Configuración del transportador (el cartero)
+const transporter = nodemailer.createTransport({
+  service: "gmail", // Puedes usar 'hotmail', 'yahoo', etc.
+  auth: {
+    user: "isaac.gonzalez.adeva@gmail.com", // ⚠️ PON TU CORREO AQUÍ
+    pass: "vvga dpdb rjbw ymih", // ⚠️ PON TU CONTRASEÑA DE APLICACIÓN AQUÍ
+  },
+});
+
 const app = express();
 app.use(cors()); // Permite que Angular se conecte
 app.use(express.json());
@@ -18,6 +29,221 @@ db.connect((err) => {
   if (err) console.error("Error conectando a MySQL:", err);
   else console.log("¡Conectado a MySQL!");
 });
+
+//============================================
+//                  CORREOS
+//============================================
+
+// Función para avisar a los administradores
+function enviarCorreoAdmins(nombre, email, fecha, comensales, mesa) {
+  // 1. Buscamos todos los correos de los administradores en la BD
+  // ⚠️ Cambia 'rol = "admin"' por la columna que tú uses para diferenciar a los administradores
+  db.query("SELECT email FROM Usuarios WHERE rol = 'admin'", (err, admins) => {
+    if (err) {
+      console.error("Error buscando admins para el correo:", err);
+      return;
+    }
+
+    if (admins.length === 0) return; // Si no hay admins, no hacemos nada
+
+    // Juntamos todos los correos separados por coma (ej: "admin1@mail.com, admin2@mail.com")
+    const correosAdmins = admins.map((admin) => admin.email).join(", ");
+
+    // 2. Preparamos el correo
+    const mailOptions = {
+      from: '"QuickBite Notificaciones" <isaac.gonzalez.adeva@gmail.com>', // Quien lo envía
+      to: correosAdmins, // A quién se lo enviamos
+      subject: `🚨 Nueva Reserva de ${nombre} - QuickBite`,
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+          <h2 style="color: #ff6b00;">¡Tienes una nueva reserva! 🍽️</h2>
+          <p>Se acaba de registrar una nueva reserva en el sistema. Estos son los detalles:</p>
+          <ul style="font-size: 16px; line-height: 1.6;">
+            <li><strong>Cliente:</strong> ${nombre}</li>
+            <li><strong>Email de contacto:</strong> ${email}</li>
+            <li><strong>Fecha y Hora:</strong> ${fecha}</li>
+            <li><strong>Comensales:</strong> ${comensales} personas</li>
+            <li><strong>Mesa ID:</strong> ${mesa}</li>
+          </ul>
+          <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+          <p style="font-size: 14px; color: #888;">Por favor, entra al panel de administración para confirmarla o gestionarla.</p>
+        </div>
+      `,
+    };
+
+    // 3. ¡Lo enviamos!
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("❌ Error enviando el correo a admins:", error);
+      } else {
+        console.log("✅ Correo enviado a admins:", info.response);
+      }
+    });
+  });
+}
+
+// Función para avisar al CLIENTE de que su reserva está confirmada
+function enviarCorreoConfirmacion(emailDestino, nombre, fecha, comensales) {
+  // Opcional: Formatear la fecha para que se vea bonita (Depende de cómo la guardes en MySQL)
+  const fechaFormateada = new Date(fecha).toLocaleDateString("es-ES", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  const mailOptions = {
+    from: '"QuickBite Restaurante" <isaac.gonzalez.adeva@gmail.com>', // Tu correo real
+    to: emailDestino, // El correo del cliente que sacamos de la BD
+    subject: `✅ ¡Tu mesa en QuickBite está confirmada!`,
+    html: `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        
+        <div style="background-color: #ff6b00; padding: 20px; text-align: center;">
+          <h1 style="color: white; margin: 0; font-size: 24px;">¡Reserva Confirmada! 🍽️</h1>
+        </div>
+
+        <div style="padding: 30px; text-align: center;">
+          <h2 style="color: #333;">¡Hola ${nombre}!</h2>
+          <p style="font-size: 16px; line-height: 1.6;">Nos alegra comunicarte que hemos revisado tu solicitud y <strong>tu mesa ya está reservada</strong>.</p>
+          
+          <div style="background: #fff3e0; padding: 20px; border-radius: 8px; display: inline-block; text-align: left; margin: 20px 0; border-left: 5px solid #ff6b00;">
+            <p style="margin: 5px 0; font-size: 16px;">📅 <strong>Cuándo:</strong> ${fechaFormateada}</p>
+            <p style="margin: 5px 0; font-size: 16px;">👥 <strong>Para:</strong> ${comensales} personas</p>
+          </div>
+
+          <p style="font-size: 16px;">Si necesitas cancelar o modificar la reserva, por favor, contáctanos lo antes posible.</p>
+          <br>
+          <p style="font-size: 18px; font-weight: bold; color: #ff6b00;">¡Te esperamos con los fuegos a tope!</p>
+          <p style="font-size: 14px; color: #888;">El equipo de QuickBite 🍔</p>
+        </div>
+      </div>
+    `,
+  };
+
+  // Enviamos el correo con Nodemailer
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error(
+        "❌ Error enviando correo de confirmación al cliente:",
+        error,
+      );
+    } else {
+      console.log(`✅ Correo de confirmación enviado a: ${emailDestino}`);
+    }
+  });
+}
+
+
+// Función para avisar a los administradores de que una reserva ha CAMBIADO
+function enviarCorreoAdminsModificacion(nombre, email, nuevaFecha, nuevosComensales, idReserva) {
+  // Buscamos a los administradores
+  db.query("SELECT email FROM Usuarios WHERE rol = 'admin'", (err, admins) => {
+    if (err || admins.length === 0) return;
+
+    const correosAdmins = admins.map(admin => admin.email).join(', ');
+
+    // Formateamos la fecha si es necesario
+    const fechaFormateada = new Date(nuevaFecha).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' });
+
+    const mailOptions = {
+      from: '"QuickBite Notificaciones" <isaac.gonzalez.adeva@gmail.com>',
+      to: correosAdmins,
+      subject: `⚠️ Modificación en la Reserva #${idReserva} - QuickBite`,
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+          <h2 style="color: #ffaa00;">¡Una reserva ha sido modificada! 🔄</h2>
+          <p>El cliente <strong>${nombre}</strong> ha modificado los datos de su reserva.</p>
+          <p>Dado que ha cambiado las condiciones, <strong>el estado de la reserva ha vuelto automáticamente a "Pendiente"</strong>.</p>
+          
+          <div style="background: #f9f9f9; padding: 15px; border-left: 4px solid #ffaa00; margin: 20px 0;">
+            <p style="margin: 0;"><strong>Nuevos detalles solicitados:</strong></p>
+            <ul style="margin-top: 10px;">
+              <li><strong>Nueva Fecha y Hora:</strong> ${fechaFormateada}</li>
+              <li><strong>Nuevos Comensales:</strong> ${nuevosComensales}</li>
+            </ul>
+          </div>
+          
+          <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+          <p style="font-size: 14px; color: #888;">Por favor, entra al panel de administración para revisar si hay disponibilidad y volver a confirmarla.</p>
+        </div>
+      `
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("❌ Error enviando el correo de modificación:", error);
+      } else {
+        console.log("✅ Correo de modificación enviado a admins:", info.response);
+      }
+    });
+  });
+}
+
+// Función para avisar al CLIENTE de que su reserva ha sido cancelada por el Admin
+function enviarCorreoCancelacionCliente(emailDestino, nombre, fecha) {
+  const fechaFormateada = new Date(fecha).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' });
+
+  const mailOptions = {
+    from: '"QuickBite Restaurante" <isaac.gonzalez.adeva@gmail.com>', 
+    to: emailDestino,
+    subject: `❌ Reserva Cancelada - QuickBite`,
+    html: `
+      <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+        <div style="background-color: #d9534f; padding: 20px; text-align: center;">
+          <h2 style="color: white; margin: 0;">Reserva Cancelada</h2>
+        </div>
+        <div style="padding: 20px;">
+          <p>Hola <strong>${nombre}</strong>,</p>
+          <p>Lamentamos informarte que tu reserva para el <strong>${fechaFormateada}</strong> ha sido cancelada.</p>
+          <p>Esto suele deberse a falta de disponibilidad de aforo en el último momento. Sentimos mucho las molestias. Si necesitas más información, no dudes en contactarnos.</p>
+        </div>
+      </div>
+    `
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if(error) console.log("❌ Error correo cancelación cliente:", error);
+  });
+}
+
+// Función para avisar a los ADMINS de que un cliente ha borrado su reserva
+function enviarCorreoAdminsEliminacion(nombre, fecha, comensales) {
+  db.query("SELECT email FROM Usuarios WHERE rol = 'admin'", (err, admins) => {
+    if (err || admins.length === 0) return;
+
+    const correosAdmins = admins.map(admin => admin.email).join(', ');
+    const fechaFormateada = new Date(fecha).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' });
+
+    const mailOptions = {
+      from: '"QuickBite Notificaciones" <isaac.gonzalez.adeva@gmail.com>',
+      to: correosAdmins,
+      subject: `🗑️ Reserva Anulada por cliente - QuickBite`,
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+          <h2 style="color: #d9534f;">¡Un cliente ha anulado su reserva! 🗑️</h2>
+          <p>El cliente <strong>${nombre}</strong> ha eliminado su reserva del sistema.</p>
+          
+          <div style="background: #f9f9f9; padding: 15px; border-left: 4px solid #d9534f; margin: 20px 0;">
+            <p style="margin: 0;"><strong>Detalles de la reserva borrada:</strong></p>
+            <ul style="margin-top: 10px;">
+              <li><strong>Fecha y Hora:</strong> ${fechaFormateada}</li>
+              <li><strong>Comensales:</strong> ${comensales}</li>
+            </ul>
+          </div>
+          
+          <p style="font-size: 14px; color: #888;">Esta reserva ya no existe en la base de datos y la mesa vuelve a estar libre para otros clientes.</p>
+        </div>
+      `
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if(error) console.log("❌ Error correo eliminación admins:", error);
+    });
+  });
+}
 
 //Ruta para obtener las mesas y su estado
 app.get("/api/mesas", (req, res) => {
@@ -104,7 +330,6 @@ app.post("/api/login", (req, res) => {
 //Ruta para crear la reserva
 // Crear una nueva reserva
 app.post("/api/reservas", (req, res) => {
-  // Añadimos id_usuario a lo que extraemos del body
   const {
     nombre_cliente,
     email_cliente,
@@ -114,49 +339,112 @@ app.post("/api/reservas", (req, res) => {
     id_usuario,
   } = req.body;
 
-  // Si no viene id_usuario (invitado), le asignamos null
   const usuario_id = id_usuario || null;
 
-  // Añadimos id_usuario a la consulta SQL
-  const query = `
-        INSERT INTO Reservas 
-        (nombre_cliente, email_cliente, fecha_reserva, num_comensales, id_mesa, estado, id_usuario) 
-        VALUES (?, ?, ?, ?, ?, 'Pendiente', ?)
-    `;
+  // --- REGLA 1: NO RESERVAR EN EL PASADO ---
+  const fechaReservaDate = new Date(fecha_reserva);
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0); // Quitamos la hora para comparar solo el día
 
-  db.query(
-    query,
-    [
-      nombre_cliente,
-      email_cliente,
-      fecha_reserva,
-      num_comensales,
-      id_mesa,
-      usuario_id,
-    ],
-    (err, result) => {
-      if (err) return res.status(500).send(err);
-      res.json({
-        mensaje: "Reserva creada con éxito",
-        id_reserva: result.insertId,
-      });
-    },
-  );
+  if (fechaReservaDate < hoy) {
+    return res
+      .status(400)
+      .json({ error: "No puedes realizar reservas en fechas pasadas." });
+  }
+
+  // --- REGLA 2: NO RESERVAR COMO INVITADO SI EL EMAIL YA TIENE CUENTA ---
+  if (!usuario_id && email_cliente) {
+    db.query(
+      "SELECT id_usuario FROM Usuarios WHERE email = ?",
+      [email_cliente],
+      (err, results) => {
+        if (err) return res.status(500).send(err);
+
+        if (results.length > 0) {
+          return res
+            .status(400)
+            .json({
+              error:
+                "Este correo ya tiene una cuenta registrada. Por favor, inicia sesión para reservar.",
+            });
+        }
+
+        // Si el email no existe, creamos la reserva
+        insertarReserva();
+      },
+    );
+  } else {
+    // Si ya está logueado o no mandó email (raro), creamos la reserva directamente
+    insertarReserva();
+  }
+
+  // Función auxiliar para no repetir código
+  function insertarReserva() {
+    const query = `
+      INSERT INTO Reservas 
+      (nombre_cliente, email_cliente, fecha_reserva, num_comensales, id_mesa, estado, id_usuario) 
+      VALUES (?, ?, ?, ?, ?, 'Pendiente', ?)
+    `;
+    db.query(
+      query,
+      [
+        nombre_cliente,
+        email_cliente,
+        fecha_reserva,
+        num_comensales,
+        id_mesa,
+        usuario_id,
+      ],
+      (err, result) => {
+        if (err) return res.status(500).send(err);
+        res.json({
+          mensaje: "Reserva creada con éxito",
+          id_reserva: result.insertId,
+        });
+
+        // 2. ENVIAR CORREO A LOS ADMINS (En segundo plano)
+        enviarCorreoAdmins(
+          nombre_cliente,
+          email_cliente,
+          fecha_reserva,
+          num_comensales,
+          id_mesa,
+        );
+      },
+    );
+  }
 });
 
-//Ruta para ver la carta
+// Ruta para ver la carta (PÚBLICA)
 app.get("/api/carta", (req, res) => {
   const query = `
     SELECT 
-      p.id_plato, 
-      p.id_categoria, /* <--- ¡ESTO ES LO QUE FALTABA! */
-      p.nombre AS nombre_plato, 
-      p.descripcion, 
-      p.precio, 
+      p.id_plato,
+      p.id_categoria, 
+      p.nombre AS nombre_plato,
+      p.descripcion,
+      p.precio,
       p.url_imagen,
-      c.nombre AS nombre_categoria 
-    FROM Platos p 
+      c.nombre AS nombre_categoria,
+      
+      -- Buscamos el descuento en orden de prioridad
+      COALESCE(op.porcentaje_descuento, oc.porcentaje_descuento, og.porcentaje_descuento, 0) AS porcentaje_descuento,
+      
+      -- Calculamos el precio final
+      p.precio - (p.precio * COALESCE(op.porcentaje_descuento, oc.porcentaje_descuento, og.porcentaje_descuento, 0) / 100) AS precio_final
+
+    FROM Platos p
     JOIN Categorias c ON p.id_categoria = c.id_categoria
+    
+    -- 1. Oferta específica del plato
+    LEFT JOIN Ofertas op ON op.id_plato = p.id_plato AND op.activa = 1
+    
+    -- 2. Oferta de la categoría
+    LEFT JOIN Ofertas oc ON oc.id_categoria = p.id_categoria AND oc.activa = 1
+    
+    -- 3. Oferta Global (las que tienen plato y categoria en NULL)
+    LEFT JOIN Ofertas og ON og.id_plato IS NULL AND og.id_categoria IS NULL AND og.activa = 1
+
     WHERE p.disponible = 1
   `;
 
@@ -168,7 +456,7 @@ app.get("/api/carta", (req, res) => {
         .json({ error: "Error al consultar la base de datos" });
     }
 
-    //Agrupar los platos por categoria
+    // Agrupar los platos por categoria (como lo tenías antes)
     const menuOrganizado = results.reduce((acc, plato) => {
       const cat = plato.nombre_categoria;
       if (!acc[cat]) acc[cat] = [];
@@ -222,10 +510,29 @@ app.delete("/api/admin/categorias/:id", (req, res) => {
 // Traer todos los platos (sin agrupar) para la tabla del admin
 app.get("/api/admin/platos", (req, res) => {
   const query = `
-        SELECT p.*, c.nombre AS nombre_categoria 
-        FROM Platos p 
-        JOIN Categorias c ON p.id_categoria = c.id_categoria
-    `;
+    SELECT 
+      p.*, 
+      c.nombre AS nombre_categoria,
+      
+      -- Buscamos el descuento en orden de prioridad
+      COALESCE(op.porcentaje_descuento, oc.porcentaje_descuento, og.porcentaje_descuento, 0) AS porcentaje_descuento,
+      
+      -- Calculamos el precio final directamente
+      p.precio - (p.precio * COALESCE(op.porcentaje_descuento, oc.porcentaje_descuento, og.porcentaje_descuento, 0) / 100) AS precio_final
+
+    FROM Platos p
+    JOIN Categorias c ON p.id_categoria = c.id_categoria
+    
+    -- 1. Oferta específica del plato
+    LEFT JOIN Ofertas op ON op.id_plato = p.id_plato AND op.activa = 1
+    
+    -- 2. Oferta de la categoría
+    LEFT JOIN Ofertas oc ON oc.id_categoria = p.id_categoria AND oc.activa = 1
+    
+    -- 3. Oferta Global (las que tienen plato y categoria en NULL)
+    LEFT JOIN Ofertas og ON og.id_plato IS NULL AND og.id_categoria IS NULL AND og.activa = 1
+  `;
+
   db.query(query, (err, results) => {
     if (err) return res.status(500).send(err);
     res.json(results);
@@ -394,20 +701,45 @@ app.post("/api/admin/ofertas", (req, res) => {
     activa,
   } = req.body;
 
-  // Si vienen vacíos, forzamos que sean NULL para la BD
   const cat = id_categoria || null;
   const plato = id_plato || null;
 
-  const query =
-    "INSERT INTO Ofertas (nombre_oferta, porcentaje_descuento, id_categoria, id_plato, activa) VALUES (?, ?, ?, ?, ?)";
-  db.query(
-    query,
-    [nombre_oferta, porcentaje_descuento, cat, plato, activa],
-    (err, result) => {
-      if (err) return res.status(500).send(err);
-      res.json({ id: result.insertId, mensaje: "Oferta creada" });
-    },
-  );
+  // --- REGLA 3: NO DUPLICAR OFERTAS EN UN MISMO PLATO ---
+  if (plato && activa) {
+    db.query(
+      "SELECT id_oferta FROM Ofertas WHERE id_plato = ? AND activa = 1",
+      [plato],
+      (err, results) => {
+        if (err) return res.status(500).send(err);
+
+        if (results.length > 0) {
+          return res
+            .status(400)
+            .json({
+              error:
+                "Este plato ya tiene una oferta activa. Desactiva la anterior primero.",
+            });
+        }
+
+        insertarOferta();
+      },
+    );
+  } else {
+    insertarOferta();
+  }
+
+  function insertarOferta() {
+    const query =
+      "INSERT INTO Ofertas (nombre_oferta, porcentaje_descuento, id_categoria, id_plato, activa) VALUES (?, ?, ?, ?, ?)";
+    db.query(
+      query,
+      [nombre_oferta, porcentaje_descuento, cat, plato, activa],
+      (err, result) => {
+        if (err) return res.status(500).send(err);
+        res.json({ id: result.insertId, mensaje: "Oferta creada" });
+      },
+    );
+  }
 });
 
 // Actualizar oferta
@@ -587,15 +919,14 @@ app.get("/api/reservas/usuario/:id", (req, res) => {
   });
 });
 
-// Actualizar una reserva (Cambiar fecha, hora o comensales)
+// Actualizar una reserva (Cambiar fecha, hora, comensales o mesa)
 app.put("/api/reservas/:id", (req, res) => {
   const id_reserva = req.params.id;
   const { num_comensales, fecha_reserva, id_mesa } = req.body;
 
-  // Quitamos la comprobación de 'estado' por si no existe en tu tabla
-  const checkQuery =
-    "SELECT * FROM Reservas WHERE id_mesa = ? AND fecha_reserva = ? AND id_reserva != ?";
-
+  // 1. Comprobamos si la mesa está libre
+  const checkQuery = "SELECT * FROM Reservas WHERE id_mesa = ? AND fecha_reserva = ? AND id_reserva != ?";
+  
   db.query(checkQuery, [id_mesa, fecha_reserva, id_reserva], (err, results) => {
     if (err) {
       console.error("Error al comprobar mesa:", err);
@@ -603,37 +934,71 @@ app.put("/api/reservas/:id", (req, res) => {
     }
 
     if (results.length > 0) {
-      return res
-        .status(400)
-        .json({ error: "La mesa ya está reservada para ese día y hora." });
+      return res.status(400).json({ error: "La mesa ya está reservada para ese día y hora." });
     }
 
-    const updateQuery =
-      "UPDATE Reservas SET num_comensales = ?, fecha_reserva = ? WHERE id_reserva = ?";
-    db.query(
-      updateQuery,
-      [num_comensales, fecha_reserva, id_reserva],
-      (updateErr) => {
-        if (updateErr) {
-          console.error("Error al actualizar:", updateErr);
-          return res.status(500).json({ error: updateErr.message });
+    // 2. Actualizamos la reserva añadiendo id_mesa y forzando el estado a 'Pendiente'
+    const updateQuery = `
+      UPDATE Reservas 
+      SET num_comensales = ?, fecha_reserva = ?, id_mesa = ?, estado = 'Pendiente' 
+      WHERE id_reserva = ?
+    `;
+    
+    db.query(updateQuery, [num_comensales, fecha_reserva, id_mesa, id_reserva], (updateErr) => {
+      if (updateErr) {
+        console.error("Error al actualizar:", updateErr);
+        return res.status(500).json({ error: updateErr.message });
+      }
+
+      // 3. Respondemos rápido al frontend
+      res.json({ mensaje: "Reserva actualizada con éxito y devuelta a Pendiente" });
+
+      // 4. MAGIA DE CORREOS: Avisamos a los admins del cambio
+      db.query("SELECT nombre_cliente, email_cliente FROM Reservas WHERE id_reserva = ?", [id_reserva], (err, datos) => {
+        if (!err && datos.length > 0) {
+          const cliente = datos[0];
+          
+          // Usamos la función que creamos en el paso anterior
+          enviarCorreoAdminsModificacion(
+            cliente.nombre_cliente, 
+            cliente.email_cliente, 
+            fecha_reserva, 
+            num_comensales, 
+            id_reserva
+          );
         }
-        res.json({ mensaje: "Reserva actualizada con éxito" });
-      },
-    );
+      });
+    });
   });
 });
 
-// Cancelar/Eliminar una reserva
+// 2. ELIMINAR una reserva (Acción del cliente)
 app.delete("/api/reservas/:id", (req, res) => {
-  db.query(
-    "DELETE FROM Reservas WHERE id_reserva = ?",
-    [req.params.id],
-    (err) => {
-      if (err) return res.status(500).send(err);
-      res.json({ mensaje: "Reserva cancelada" });
-    },
-  );
+  const idReserva = req.params.id;
+
+  // 1. PRIMERO SACAMOS LOS DATOS ANTES DE BORRARLA (El truco vital)
+  db.query("SELECT nombre_cliente, fecha_reserva, num_comensales FROM Reservas WHERE id_reserva = ?", [idReserva], (err, datos) => {
+    if (err) return res.status(500).json({ error: "Error leyendo datos previos" });
+    
+    if (datos.length === 0) return res.status(404).json({ error: "Reserva no encontrada" });
+    
+    const reservaEliminada = datos[0]; // Guardamos los datos temporalmente
+
+    // 2. AHORA SÍ, LA BORRAMOS DE LA BBDD
+    db.query("DELETE FROM Reservas WHERE id_reserva = ?", [idReserva], (delErr) => {
+      // Usamos send(err) como tenías en tu código original para mantener tu estilo
+      if (delErr) return res.status(500).send(delErr);
+
+      res.json({ mensaje: "Reserva cancelada y eliminada con éxito" });
+
+      // 3. ENVIAMOS EL CORREO A LOS ADMINS (Con los datos guardados)
+      enviarCorreoAdminsEliminacion(
+        reservaEliminada.nombre_cliente, 
+        reservaEliminada.fecha_reserva, 
+        reservaEliminada.num_comensales
+      );
+    });
+  });
 });
 
 // 1. OBTENER TODAS LAS RESERVAS (Para el panel de Admin)
@@ -660,7 +1025,7 @@ app.get("/api/admin/reservas", (req, res) => {
   });
 });
 
-// 2. CAMBIAR EL ESTADO DE UNA RESERVA (Confirmar / Rechazar)
+// 2. CAMBIAR EL ESTADO DE UNA RESERVA (Confirmar / Cancelar)
 app.put("/api/admin/reservas/:id/estado", (req, res) => {
   const { estado } = req.body; // Recibirá 'Confirmada', 'Rechazada' o 'Cancelada'
   const id_reserva = req.params.id;
@@ -668,7 +1033,42 @@ app.put("/api/admin/reservas/:id/estado", (req, res) => {
   const query = "UPDATE Reservas SET estado = ? WHERE id_reserva = ?";
   db.query(query, [estado, id_reserva], (err) => {
     if (err) return res.status(500).json({ error: err.message });
+
+    // 1. Respondemos rápido al admin
     res.json({ mensaje: `Reserva ${estado.toLowerCase()} con éxito` });
+
+    // 2. MAGIA DE CORREOS
+    db.query(
+      "SELECT nombre_cliente, email_cliente, fecha_reserva, num_comensales FROM Reservas WHERE id_reserva = ?",
+      [id_reserva],
+      (err, datos) => {
+        if (err) {
+          console.error("Error buscando datos para el correo:", err);
+          return;
+        }
+
+        if (datos.length > 0 && datos[0].email_cliente) {
+          const reserva = datos[0];
+          
+          if (estado === "Confirmada") {
+            // Si confirma, el correo que ya tenías
+            enviarCorreoConfirmacion(
+              reserva.email_cliente,
+              reserva.nombre_cliente,
+              reserva.fecha_reserva,
+              reserva.num_comensales
+            );
+          } else if (estado === "Cancelada") {
+            // 👇 NUEVO: Si cancela o rechaza, correo de disculpa
+            enviarCorreoCancelacionCliente(
+              reserva.email_cliente,
+              reserva.nombre_cliente,
+              reserva.fecha_reserva
+            );
+          }
+        }
+      }
+    );
   });
 });
 

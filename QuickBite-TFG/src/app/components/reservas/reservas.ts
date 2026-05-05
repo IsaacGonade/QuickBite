@@ -40,6 +40,8 @@ export class Reservas implements OnInit {
   fechaInput: Date | null = null;
   horaInput: string = '';
   fechaSeleccionada: string = '';
+  // Formatea la fecha de hoy a YYYY-MM-DD
+  fechaMinima: string = new Date().toISOString().split('T')[0];
   mesas: any[] = [];
   mesaSeleccionadaId: number | null = null;
   usuarioActual: any = null;
@@ -92,7 +94,7 @@ export class Reservas implements OnInit {
 
         this.reservasService.crearReserva(nuevaReserva).subscribe({
           next: () => {
-            this.snackBar.open('¡Reserva realizada! Te hemos enviado un correo.', 'Genial', {
+            this.snackBar.open('¡Reserva realizada! Le llegará un correo cuando sea confirmada.', 'Genial', {
               duration: 4000,
               panelClass: ['snack-success'],
               horizontalPosition: 'center',
@@ -102,11 +104,14 @@ export class Reservas implements OnInit {
             // 2. ¡MAGIA! Redirigimos al usuario a la página de login
             this.router.navigate(['/']);
           },
-          error: (err) =>
-            this.snackBar.open('Error al guardar la reserva.', 'Cerrar', {
+          error: (err) => {
+            const mensaje = err.error?.error || 'Ocurrió un error al procesar la reserva.';
+
+            this.snackBar.open(mensaje, 'Cerrar', {
               duration: 4000,
               panelClass: ['snack-error'],
-            }),
+            })
+          }
         });
       }
     });

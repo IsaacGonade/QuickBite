@@ -164,7 +164,18 @@
               </ng-container>
               <ng-container matColumnDef="precio">
                 <th mat-header-cell *matHeaderCellDef> Precio </th>
-                <td mat-cell *matCellDef="let plato"> {{plato.precio | currency:'EUR'}} </td>
+                <td mat-cell *matCellDef="let plato">
+                  @if (plato.porcentaje_descuento > 0) {
+                    <span style="text-decoration: line-through; color: #888; font-size: 0.85em;">
+                      {{ plato.precio | currency:'EUR' }}
+                    </span>
+                    <br>
+                    <strong style="color: #ff6b00;">{{ plato.precio_final | currency:'EUR' }}</strong>
+                    <span class="badge-descuento">-{{ plato.porcentaje_descuento }}%</span>
+                  } @else {
+                    <strong>{{ plato.precio | currency:'EUR' }}</strong>
+                  }
+                </td>
               </ng-container>
               <ng-container matColumnDef="disponible">
                 <th mat-header-cell *matHeaderCellDef> Estado </th>

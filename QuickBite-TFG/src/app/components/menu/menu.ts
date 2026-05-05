@@ -41,7 +41,7 @@ export class Menu implements OnInit {
   }
 
   // Función para calcular el precio final en el HTML
-  obtenerPrecioFinal(plato: any): number {
+  /*obtenerPrecioFinal(plato: any): number {
     if (!this.esUsuarioRegistrado) return plato.precio;
 
     // Buscamos si hay oferta para este plato específico
@@ -57,7 +57,7 @@ export class Menu implements OnInit {
     }
 
     return plato.precio;
-  }
+  }*/
 
   cargarCarta() {
     this.cartaService.getCarta().subscribe({

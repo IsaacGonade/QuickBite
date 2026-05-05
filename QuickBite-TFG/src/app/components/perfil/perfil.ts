@@ -174,7 +174,7 @@ export class PerfilComponent implements OnInit {
         titulo: 'Cancelar Reserva',
         mensaje: '¿Estás seguro de que deseas cancelar esta reserva?',
         textoBoton: 'Sí, cancelar',
-        isDanger: false, // Naranja normal
+        isDanger: true, // Naranja normal
       },
     });
 

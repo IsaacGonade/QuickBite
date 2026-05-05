@@ -27,7 +27,7 @@
       <!-- Selector de FECHA -->
       <mat-form-field appearance="outline" style="flex: 1">
         <mat-label>Fecha</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="fecha" />
+        <input matInput [matDatepicker]="picker" formControlName="fecha" [min]="fechaMinima"/>
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
